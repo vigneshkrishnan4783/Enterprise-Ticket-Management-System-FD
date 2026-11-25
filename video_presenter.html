@@ -3,24 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Ticket Management System - Team Lead Executive Presentation (1080p Full HD)</title>
+  <title>Enterprise Ticket Management System - Developed App UI Walkthrough (1080p Full HD)</title>
   <style>
     :root {
       --primary: #1e3a8a;
-      --primary-light: #3b82f6;
+      --primary-light: #2563eb;
+      --primary-hover: #1d4ed8;
       --accent: #06b6d4;
-      --accent-green: #10b981;
-      --accent-amber: #f59e0b;
-      --accent-rose: #f43f5e;
-      --bg: #030712;
-      --card-bg: rgba(17, 24, 39, 0.75);
-      --card-border: rgba(255, 255, 255, 0.12);
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
+      --bg: #090e17;
+      --canvas-bg: #0f172a;
+      --sidebar-bg: #0b1329;
+      --header-bg: #0d1527;
+      --card-bg: #1e293b;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --crit: #ef4444;
+      --high: #f59e0b;
+      --med: #3b82f6;
+      --low: #64748b;
+      --green: #10b981;
+      --purple: #a855f7;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: radial-gradient(circle at 50% 20%, #0f172a 0%, #030712 100%);
+      background: radial-gradient(circle at 50% 10%, #1e293b 0%, #030712 100%);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       min-height: 100vh;
@@ -28,914 +35,931 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 12px;
       overflow-x: hidden;
     }
 
-    /* 16:9 Full HD Video Viewport */
-    .video-viewport {
-      width: 1360px;
-      height: 765px;
+    /* 16:9 Desktop Canvas Container */
+    .viewport {
+      width: 1400px;
+      height: 788px;
       max-width: 96vw;
-      max-height: 82vh;
+      max-height: 84vh;
       aspect-ratio: 16 / 9;
-      background: linear-gradient(145deg, #0b1329 0%, #060b18 100%);
-      border-radius: 16px;
+      background: var(--canvas-bg);
+      border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(59, 130, 246, 0.15);
-      position: relative;
+      box-shadow: 0 30px 60px -12px rgba(0,0,0,0.85), 0 0 30px rgba(37, 99, 235, 0.2);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-    }
-
-    /* Top Timeline & Progress Bar */
-    .timeline-bar {
-      height: 5px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
       position: relative;
     }
-    .timeline-progress {
-      height: 100%;
-      width: 14.28%;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4, #10b981);
-      transition: width 0.4s ease;
-      box-shadow: 0 0 12px #06b6d4;
-    }
 
-    /* Top Executive Header */
-    .viewport-header {
+    /* Top Timeline & Title Bar */
+    .top-meta-bar {
+      height: 42px;
+      background: #060a12;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 36px 12px 36px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0 20px;
+      font-size: 13px;
     }
-    .brand-title {
+    .timeline-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4, #10b981);
+      width: 12.5%;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 10px #06b6d4;
+    }
+
+    /* ========================================================
+       LIVE FLUTTER APP UI REPLICA (Header + Sidebar + Content)
+       ======================================================== */
+    .app-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #090e1a;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* App Header */
+    .app-header {
+      height: 58px;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--card-border);
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 800;
-      font-size: 17px;
-      letter-spacing: -0.2px;
-      color: #ffffff;
+      justify-content: space-between;
+      padding: 0 24px;
     }
-    .brand-icon {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, #2563eb, #06b6d4);
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.2px;
+    }
+    .header-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #1d4ed8, #06b6d4);
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+      font-size: 16px;
     }
-    .rec-indicator {
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #f87171;
-      padding: 4px 12px;
+      gap: 14px;
+    }
+    .persona-badge {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .rec-dot {
-      width: 8px;
-      height: 8px;
-      background: #ef4444;
+    .api-pill {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .api-dot {
+      width: 6px;
+      height: 6px;
+      background: #10b981;
       border-radius: 50%;
       animation: pulse 1.5s infinite;
     }
     @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.85); }
-      100% { opacity: 1; transform: scale(1); }
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
     }
 
-    /* Scene Stage */
-    .scene {
+    /* App Body (Sidebar + Content Stage) */
+    .app-body {
       flex: 1;
-      padding: 32px 42px;
-      display: none;
-      flex-direction: column;
-      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      display: flex;
       overflow: hidden;
     }
-    .scene.active { display: flex; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px) scale(0.995); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    /* Persistent Sidebar */
+    .app-sidebar {
+      width: 240px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      padding: 18px 12px;
+      gap: 4px;
     }
-
-    .badge-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(59, 130, 246, 0.16);
-      color: #60a5fa;
-      border: 1px solid rgba(59, 130, 246, 0.35);
-      padding: 5px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
+    .sidebar-heading {
+      font-size: 10.5px;
       text-transform: uppercase;
-      margin-bottom: 10px;
-      width: fit-content;
+      font-weight: 700;
+      color: #64748b;
+      padding: 8px 12px 4px 12px;
+      letter-spacing: 0.6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .nav-item.active {
+      background: rgba(37, 99, 235, 0.18);
+      color: #60a5fa;
+      border-left: 3px solid #3b82f6;
+    }
+    .nav-count {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+    .nav-count.crit {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
     }
 
-    h1.scene-title {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -0.6px;
-      line-height: 1.2;
-      margin-bottom: 8px;
-      background: linear-gradient(to right, #ffffff, #cbd5e1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    /* Content Stage Area */
+    .app-main {
+      flex: 1;
+      background: #090e1a;
+      overflow-y: auto;
+      padding: 20px 24px;
+      position: relative;
     }
-    p.scene-desc {
-      font-size: 15px;
-      color: var(--text-muted);
-      max-width: 920px;
-      line-height: 1.5;
+
+    /* Active UI Spotlight Overlay */
+    .screen-container {
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+    .screen-container.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* UI Widgets */
+    .alert-banner {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
       margin-bottom: 20px;
     }
-
-    /* Content Layouts */
-    .scene-body {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      overflow: hidden;
-    }
-    .scene-body.single-col {
-      grid-template-columns: 1fr;
-    }
-
-    /* Cards & Panels */
-    .glass-card {
+    .kpi-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 20px;
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow: hidden;
-    }
-    .glass-card h3 {
-      font-size: 15px;
-      font-weight: 700;
-      color: #f3f4f6;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Mock Tables & Lists */
-    .spec-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-    }
-    .spec-table th {
-      text-align: left;
-      padding: 8px 10px;
-      color: #94a3b8;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      font-weight: 600;
-    }
-    .spec-table td {
-      padding: 8px 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      color: #e2e8f0;
-    }
-    .spec-table tr:last-child td { border-bottom: none; }
-
-    /* Visual Metrics Cards */
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-    .metric-pill {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 14px 16px;
+      border-radius: 8px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    .metric-pill .lbl { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
-    .metric-pill .val { font-size: 22px; font-weight: 800; color: #ffffff; }
+    .kpi-lbl { font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
+    .kpi-val { font-size: 22px; font-weight: 800; color: #ffffff; }
 
-    /* Status Badges */
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .data-table th {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px 14px;
+      color: #94a3b8;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #f1f5f9;
+    }
+    .data-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    /* Badges */
     .badge {
       display: inline-block;
       padding: 3px 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
     }
-    .badge.crit { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4); }
+    .badge.crit { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
     .badge.high { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
     .badge.med  { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
     .badge.low  { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.4); }
-    .badge.open { background: rgba(37, 99, 235, 0.2); color: #60a5fa; }
-    .badge.prog { background: rgba(217, 119, 6, 0.2); color: #f59e0b; }
+    .badge.prog { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
     .badge.pend { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
     .badge.res  { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .badge.open { background: rgba(37, 99, 235, 0.2); color: #60a5fa; }
 
-    /* Interactive Subtitle Audio Bar */
-    .subtitle-bar {
-      height: 82px;
-      background: rgba(11, 19, 43, 0.95);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 14px 36px;
+    /* Form Replica */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label { font-size: 12px; font-weight: 700; color: #cbd5e1; }
+    .form-input {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 9px 12px;
+      color: #ffffff;
+      font-size: 12.5px;
+    }
+
+    /* Subtitle & Narration Bar */
+    .narration-bar {
+      height: 76px;
+      background: #080d19;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 10px 24px;
       display: flex;
       align-items: center;
       gap: 16px;
-      box-shadow: 0 -8px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.5);
     }
-    .speaker-avatar {
-      width: 44px;
-      height: 44px;
+    .voice-avatar {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 18px;
       flex-shrink: 0;
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+      box-shadow: 0 0 14px rgba(37, 99, 235, 0.4);
     }
-    .subtitle-content {
+    .narr-meta {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
-    .subtitle-role {
+    .narr-tag {
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 800;
       color: #38bdf8;
       letter-spacing: 0.6px;
       text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-    .sound-bars {
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-      height: 12px;
-    }
-    .sound-bar {
-      width: 3px;
-      height: 100%;
-      background: #38bdf8;
-      border-radius: 1px;
-      animation: soundWave 0.8s ease-in-out infinite alternate;
-    }
-    .sound-bar:nth-child(2) { animation-delay: 0.2s; height: 60%; }
-    .sound-bar:nth-child(3) { animation-delay: 0.4s; height: 80%; }
-    @keyframes soundWave {
-      0% { height: 20%; }
-      100% { height: 100%; }
-    }
-    .subtitle-text {
-      font-size: 14.5px;
+    .narr-text {
+      font-size: 14px;
       font-weight: 500;
       color: #f8fafc;
-      line-height: 1.45;
-      max-height: 44px;
-      overflow: hidden;
+      line-height: 1.4;
     }
 
-    /* Master Controls */
-    .controls-wrapper {
-      margin-top: 16px;
+    /* Bottom Control Bar */
+    .controls {
+      margin-top: 14px;
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(17, 24, 39, 0.85);
-      padding: 10px 24px;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 8px 20px;
       border-radius: 40px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
-    .btn-ctrl {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    .btn {
+      background: #2563eb;
       color: white;
       border: none;
-      padding: 10px 18px;
-      border-radius: 24px;
-      font-size: 13.5px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      gap: 6px;
+      transition: all 0.15s;
     }
-    .btn-ctrl:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
-    }
-    .btn-ctrl.secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: #cbd5e1;
-      box-shadow: none;
-    }
-    .btn-ctrl.secondary:hover {
-      background: rgba(255, 255, 255, 0.16);
-      color: white;
-    }
-    .btn-ctrl.record {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      border: 1px solid #f87171;
-      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
-    }
-    .btn-ctrl.record:hover {
-      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.6);
-    }
-    .voice-select {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      outline: none;
-      cursor: pointer;
-    }
-    .voice-select option { background: #0f172a; color: white; }
-    .progress-text { font-size: 12.5px; color: var(--text-muted); font-weight: 700; padding: 0 6px; }
+    .btn:hover { background: #1d4ed8; }
+    .btn.secondary { background: rgba(255, 255, 255, 0.1); }
+    .btn.secondary:hover { background: rgba(255, 255, 255, 0.18); }
+    .btn.lang { background: linear-gradient(135deg, #059669, #10b981); }
+    .btn.rec { background: linear-gradient(135deg, #ef4444, #dc2626); }
   </style>
 </head>
 <body>
 
-  <!-- 16:9 Full HD Presentation Container -->
-  <div class="video-viewport">
-    
-    <!-- Top Progress Line -->
-    <div class="timeline-bar">
-      <div class="timeline-progress" id="timeline-progress"></div>
-    </div>
+  <!-- Full HD 16:9 Presentation Canvas -->
+  <div class="viewport">
+    <div class="timeline-fill" id="timeline-bar"></div>
 
-    <!-- Header Banner -->
-    <div class="viewport-header">
-      <div class="brand-title">
-        <div class="brand-icon">⚡</div>
-        <span>Enterprise Ticket Management System • Engineering Review</span>
+    <!-- Top Metadata Bar -->
+    <div class="top-meta-bar">
+      <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #94a3b8;">
+        <span style="color:#60a5fa;">PROJECT TOUR:</span>
+        <span id="screen-title" style="color:#ffffff;">01 / Main Executive Dashboard</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 14px;">
-        <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">Desktop Web Client (1920×1080)</span>
-        <div class="rec-indicator">
-          <div class="rec-dot"></div>
-          <span>1080p HD AI VOICE</span>
-        </div>
+      <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #94a3b8;">
+        <span>Desktop Screen (1920×1080)</span>
+        <span style="color:#34d399; font-weight: 700;">● Live App UI Walkthrough</span>
       </div>
     </div>
 
-    <!-- ================= SCENE 1: Executive Overview ================= -->
-    <div class="scene active" id="scene-0">
-      <div class="badge-tag">01 / Executive Overview</div>
-      <h1 class="scene-title">Enterprise Incident & Ticket Management</h1>
-      <p class="scene-desc">Engineered to streamline high-velocity enterprise IT operations with strict SLA governance, zero-compromise RBAC security, and real-time backend synchronization.</p>
+    <!-- Live Developed App Shell (Replica of Flutter Web UI) -->
+    <div class="app-shell">
       
-      <div class="scene-body">
-        <div class="glass-card">
-          <h3>🎯 Core Engineering Objectives</h3>
-          <p style="font-size: 13.5px; color: #cbd5e1; line-height: 1.6;">
-            Modern enterprise support teams struggle with fragmented communication, missed SLA deadlines, and lack of accountability. This solution delivers a unified desktop operations cockpit engineered in Flutter Web with clean architecture, reactive state management, and direct REST API connectivity.
-          </p>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;">
-            <div style="background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.3); border-radius: 8px; padding: 12px;">
-              <span style="font-size: 11px; color: #60a5fa; font-weight: 700; text-transform: uppercase;">Architecture</span>
-              <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 2px;">Desktop-First Web</div>
-            </div>
-            <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 12px;">
-              <span style="font-size: 11px; color: #34d399; font-weight: 700; text-transform: uppercase;">Code Health</span>
-              <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 2px;">0 Warnings / 0 Errors</div>
-            </div>
+      <!-- App Header -->
+      <div class="app-header">
+        <div class="header-logo">
+          <div class="header-logo-icon">⚡</div>
+          <span>Enterprise Ticket System</span>
+        </div>
+        <div class="header-right">
+          <div class="persona-badge" id="app-persona">
+            <span>👤 Support Agent (DevOps)</span>
           </div>
-        </div>
-
-        <div class="glass-card">
-          <h3>🏗️ System Architecture & Data Flow</h3>
-          <table class="spec-table">
-            <tr>
-              <th style="width: 35%;">Layer</th>
-              <th>Enterprise Implementation</th>
-            </tr>
-            <tr>
-              <td><strong>Frontend Shell</strong></td>
-              <td>Flutter Web (Dart 3.x), Responsive Desktop (1920×1080 & 1440×900)</td>
-            </tr>
-            <tr>
-              <td><strong>State Layer</strong></td>
-              <td>Provider-based reactive data pipelines with granular notifications</td>
-            </tr>
-            <tr>
-              <td><strong>API Client</strong></td>
-              <td>Enterprise <code>ApiService</code> targeting <code>http://localhost:8080/api</code></td>
-            </tr>
-            <tr>
-              <td><strong>Resilience</strong></td>
-              <td>Automatic offline health checks with intelligent in-memory mock fallback</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= SCENE 2: Desktop Operations Hub ================= -->
-    <div class="scene" id="scene-1">
-      <div class="badge-tag">02 / High-Density Operations Hub</div>
-      <h1 class="scene-title">Desktop Screen Resolution & Reactive UI</h1>
-      <p class="scene-desc">Designed specifically for multi-monitor workstations, high-density 1080p desktop resolutions, and high-frequency dispatch operations.</p>
-      
-      <div class="scene-body single-col">
-        <div class="metric-grid">
-          <div class="metric-pill">
-            <span class="lbl">Total Active Incidents</span>
-            <span class="val" style="color: #60a5fa;">42</span>
-          </div>
-          <div class="metric-pill">
-            <span class="lbl">In Progress Workload</span>
-            <span class="val" style="color: #f59e0b;">18</span>
-          </div>
-          <div class="metric-pill">
-            <span class="lbl">SLA At-Risk Alerts</span>
-            <span class="val" style="color: #f43f5e;">3</span>
-          </div>
-          <div class="metric-pill">
-            <span class="lbl">Customer CSAT</span>
-            <span class="val" style="color: #34d399;">4.8 ★</span>
-          </div>
-        </div>
-
-        <div class="glass-card" style="padding: 16px;">
-          <h3 style="margin-bottom: 8px;">📋 Dispatch Queue Monitor (Desktop Preview)</h3>
-          <table class="spec-table">
-            <thead>
-              <tr>
-                <th>Ticket ID</th>
-                <th>Subject / Summary</th>
-                <th>Department</th>
-                <th>Priority Matrix</th>
-                <th>Status Lifecycle</th>
-                <th>SLA Countdown</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>#TICK-8021</strong></td>
-                <td>Core Payment Gateway 504 Gateway Timeout</td>
-                <td>DevOps & Infra</td>
-                <td><span class="badge crit">P1 - Critical</span></td>
-                <td><span class="badge prog">In Progress</span></td>
-                <td><span style="color:#f43f5e; font-weight: 700;">⏱ 24m remaining</span></td>
-              </tr>
-              <tr>
-                <td><strong>#TICK-8022</strong></td>
-                <td>SSO OAuth 2.0 Token Refresh Failure</td>
-                <td>Security Engineering</td>
-                <td><span class="badge high">P2 - High</span></td>
-                <td><span class="badge pend">Pending Customer (Paused)</span></td>
-                <td><span style="color:#c084fc; font-weight: 700;">⏸ Clock Frozen</span></td>
-              </tr>
-              <tr>
-                <td><strong>#TICK-8023</strong></td>
-                <td>New Onboarding Batch for Finance Auditors</td>
-                <td>IT Service Desk</td>
-                <td><span class="badge med">P3 - Medium</span></td>
-                <td><span class="badge open">Open Pool</span></td>
-                <td><span style="color:#60a5fa; font-weight: 700;">⏱ 18h remaining</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= SCENE 3: 7-Persona RBAC Security ================= -->
-    <div class="scene" id="scene-2">
-      <div class="badge-tag">03 / Security & Governance (FR-008)</div>
-      <h1 class="scene-title">7 Enterprise Personas & Role Scoping</h1>
-      <p class="scene-desc">Fine-grained Role-Based Access Control guarantees strict enterprise data scoping, least-privilege access, and complete tenant isolation.</p>
-      
-      <div class="scene-body">
-        <div class="glass-card">
-          <h3>🛡️ Persona Matrix & Permissions</h3>
-          <table class="spec-table">
-            <tr>
-              <th>Role</th>
-              <th>Visibility Scope</th>
-              <th>Key Capabilities</th>
-            </tr>
-            <tr>
-              <td><strong>Customer</strong></td>
-              <td>Own Tickets Only</td>
-              <td>Register incidents, reply publicly, rate CSAT (1-5★)</td>
-            </tr>
-            <tr>
-              <td><strong>Support Agent</strong></td>
-              <td>Assigned & Team Queue</td>
-              <td>Work tickets, public replies, private staff notes</td>
-            </tr>
-            <tr>
-              <td><strong>Team Lead</strong></td>
-              <td>Department Queue</td>
-              <td>Triage, workload balance, assignment overrides</td>
-            </tr>
-            <tr>
-              <td><strong>Compliance</strong></td>
-              <td>Global Read-Only</td>
-              <td>Access immutable audit logs & SLA breach history</td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="glass-card">
-          <h3>⚡ Live Role Switching Bar</h3>
-          <p style="font-size: 13.5px; color: #cbd5e1; line-height: 1.6;">
-            The top navigation bar provides an instant persona switcher, enabling QA testers and engineering leads to evaluate scoped behavior on the fly:
-          </p>
-          <ul style="font-size: 13px; color: #94a3b8; line-height: 1.8; padding-left: 20px;">
-            <li><strong style="color:#f8fafc;">Customer Mode:</strong> Internal notes are cryptographically shielded.</li>
-            <li><strong style="color:#f8fafc;">Lead Mode:</strong> Unlocks reassign modal with mandatory reason dialog.</li>
-            <li><strong style="color:#f8fafc;">Admin Mode:</strong> Full control over SLA policies & department routing.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= SCENE 4: Priority Matrix & SLA Engine ================= -->
-    <div class="scene" id="scene-3">
-      <div class="badge-tag">04 / Intelligent SLA Engine (FR-016)</div>
-      <h1 class="scene-title">Dynamic 3×3 Priority Matrix & Smart Pause</h1>
-      <p class="scene-desc">Severity is mathematically derived from Business Impact × Service Urgency, driving independent response and resolution deadlines.</p>
-      
-      <div class="scene-body">
-        <div class="glass-card">
-          <h3>🧮 3×3 Dynamic Derivation Matrix</h3>
-          <table class="spec-table" style="text-align: center;">
-            <thead>
-              <tr>
-                <th style="text-align: left;">Impact \ Urgency</th>
-                <th>Low Urgency</th>
-                <th>Medium Urgency</th>
-                <th>High Urgency</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="text-align: left;"><strong>High Impact</strong></td>
-                <td><span class="badge med">P3 - Med</span></td>
-                <td><span class="badge high">P2 - High</span></td>
-                <td><span class="badge crit">P1 - Critical</span></td>
-              </tr>
-              <tr>
-                <td style="text-align: left;"><strong>Medium Impact</strong></td>
-                <td><span class="badge low">P4 - Low</span></td>
-                <td><span class="badge med">P3 - Med</span></td>
-                <td><span class="badge high">P2 - High</span></td>
-              </tr>
-              <tr>
-                <td style="text-align: left;"><strong>Low Impact</strong></td>
-                <td><span class="badge low">P4 - Low</span></td>
-                <td><span class="badge low">P4 - Low</span></td>
-                <td><span class="badge med">P3 - Med</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="glass-card">
-          <h3>⏸️ Automated SLA Clock Freezing Rule</h3>
-          <div style="background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 14px;">
-            <div style="font-size: 13px; font-weight: 700; color: #d8b4fe; margin-bottom: 4px;">FR-016 Specification Rule:</div>
-            <p style="font-size: 12.5px; color: #e9d5ff; line-height: 1.5;">
-              When status transitions to <strong>"Pending Customer"</strong>, the system prompts for required troubleshooting clarification and automatically freezes the Resolution SLA countdown, ensuring fairness in SLA reporting.
-            </p>
-          </div>
-          <div style="display: flex; gap: 10px; margin-top: 6px;">
-            <div style="flex: 1; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; font-size: 12px; color: #94a3b8;">
-              <strong>P1 First Response:</strong> 15 Minutes
-            </div>
-            <div style="flex: 1; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; font-size: 12px; color: #94a3b8;">
-              <strong>P1 Resolution SLA:</strong> 2 Hours
-            </div>
+          <div class="api-pill">
+            <div class="api-dot"></div>
+            <span>http://localhost:8080/api (Connected)</span>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ================= SCENE 5: Dual-Stream & Audit Trail ================= -->
-    <div class="scene" id="scene-4">
-      <div class="badge-tag">05 / Collaboration & Compliance (FR-012, FR-026)</div>
-      <h1 class="scene-title">Dual-Stream Comms & Immutable Audit Trail</h1>
-      <p class="scene-desc">Separates public client communications from staff collaboration, coupled with an immutable audit log for compliance.</p>
-      
-      <div class="scene-body">
-        <div class="glass-card" style="border-color: rgba(245, 158, 11, 0.3);">
-          <h3>💬 Dual-Stream Communication Channels</h3>
+      <!-- App Body (Sidebar + Content Stage) -->
+      <div class="app-body">
+        
+        <!-- Persistent Left Sidebar -->
+        <div class="app-sidebar">
+          <div class="sidebar-heading">Navigation</div>
+          <div class="nav-item active" id="nav-dash">
+            <span>📊 Dashboard</span>
+          </div>
+          <div class="nav-item" id="nav-tickets">
+            <span>📋 Ticket Queues</span>
+            <span class="nav-count">42</span>
+          </div>
+          <div class="nav-item" id="nav-create">
+            <span>➕ Create Ticket</span>
+          </div>
+          <div class="nav-item" id="nav-reports">
+            <span>📈 Reports & KPI</span>
+          </div>
+
+          <div class="sidebar-heading" style="margin-top: 10px;">Queue Pools</div>
+          <div class="nav-item" id="nav-my">
+            <span>👤 My Workload</span>
+            <span class="nav-count">8</span>
+          </div>
+          <div class="nav-item" id="nav-triage">
+            <span>📥 Triage Pool</span>
+            <span class="nav-count">14</span>
+          </div>
+          <div class="nav-item" id="nav-risk">
+            <span>🚨 SLA At-Risk</span>
+            <span class="nav-count crit">3</span>
+          </div>
+        </div>
+
+        <!-- Main Content Canvas (Flips through the exact developed screens) -->
+        <div class="app-main">
           
-          <div style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 8px; padding: 10px;">
-            <div style="font-size: 11px; font-weight: 700; color: #60a5fa;">PUBLIC CUSTOMER STREAM</div>
-            <div style="font-size: 12.5px; color: #e2e8f0; margin-top: 4px;">"We have deployed hotfix v2.4.1 to staging. Please verify access."</div>
+          <!-- SCREEN 1: Main Dashboard (DashboardView) -->
+          <div class="screen-container active" id="screen-0">
+            <div class="alert-banner">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">⚠️</span>
+                <div>
+                  <div style="font-weight: 700; color: #f87171; font-size: 13.5px;">3 Tickets approaching SLA Resolution Deadline!</div>
+                  <div style="font-size: 11.5px; color: #94a3b8;">Escalation alerts active for Team Leads and Operations Managers.</div>
+                </div>
+              </div>
+              <button class="btn" style="padding: 4px 10px; font-size: 11px; background: #ef4444;">View Breached</button>
+            </div>
+
+            <div class="kpi-row">
+              <div class="kpi-card">
+                <span class="kpi-lbl">Total Active</span>
+                <span class="kpi-val" style="color: #60a5fa;">42</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-lbl">In Progress</span>
+                <span class="kpi-val" style="color: #f59e0b;">18</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-lbl">Pending Customer</span>
+                <span class="kpi-val" style="color: #c084fc;">9</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-lbl">SLA At-Risk</span>
+                <span class="kpi-val" style="color: #f87171;">3</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-lbl">CSAT Score</span>
+                <span class="kpi-val" style="color: #34d399;">4.8 ★</span>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 8px; font-weight: 700; font-size: 13px; color: #cbd5e1;">Recent Critical Incident Dispatch</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Incident Summary</th>
+                  <th>Department</th>
+                  <th>Priority Matrix</th>
+                  <th>Status</th>
+                  <th>SLA Clock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>#TICK-8021</strong></td>
+                  <td>Core Payment Gateway 504 Timeout on Checkout</td>
+                  <td>DevOps & Infra</td>
+                  <td><span class="badge crit">P1 - Critical</span></td>
+                  <td><span class="badge prog">In Progress</span></td>
+                  <td><span style="color:#f87171; font-weight:700;">⏱ 24m remaining</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#TICK-8022</strong></td>
+                  <td>SSO OAuth 2.0 Token Refresh Failure in ERP</td>
+                  <td>Security Eng</td>
+                  <td><span class="badge high">P2 - High</span></td>
+                  <td><span class="badge pend">Pending Customer (Paused)</span></td>
+                  <td><span style="color:#c084fc; font-weight:700;">⏸ Clock Frozen</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#TICK-8023</strong></td>
+                  <td>New Employee Workspace Provisioning</td>
+                  <td>IT Helpdesk</td>
+                  <td><span class="badge med">P3 - Medium</span></td>
+                  <td><span class="badge open">Open Pool</span></td>
+                  <td><span style="color:#60a5fa; font-weight:700;">⏱ 18h remaining</span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; padding: 10px;">
-            <div style="font-size: 11px; font-weight: 700; color: #fbbf24;">🔒 INTERNAL STAFF ONLY (AMBER SHIELD)</div>
-            <div style="font-size: 12.5px; color: #fde68a; margin-top: 4px;">"Root cause: Redis connection pool exhausted. DB failover completed."</div>
-          </div>
-        </div>
+          <!-- SCREEN 2: Ticket Queue & Filters (TicketListView) -->
+          <div class="screen-container" id="screen-1">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <div style="display: flex; gap: 8px;">
+                <input class="form-input" style="width: 280px;" placeholder="🔍 Search tickets by ID, title, requester..." value="Payment Gateway">
+                <select class="form-input" style="width: 160px;">
+                  <option>All Departments</option>
+                  <option selected>DevOps & Infra</option>
+                  <option>Security</option>
+                </select>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button class="btn" style="font-size: 12px;">+ Filter Priority</button>
+                <button class="btn secondary" style="font-size: 12px;">Export CSV</button>
+              </div>
+            </div>
 
-        <div class="glass-card">
-          <h3>📜 Immutable Audit Trail (ISO 27001 Compliant)</h3>
-          <table class="spec-table">
-            <thead>
-              <tr>
-                <th>Timestamp</th>
-                <th>Actor</th>
-                <th>Action</th>
-                <th>Mandatory Reason</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>11:02:14</td>
-                <td>Lead David</td>
-                <td>Reassigned</td>
-                <td>Workload balancing across Tier 3</td>
-              </tr>
-              <tr>
-                <td>10:45:00</td>
-                <td>Agent Sarah</td>
-                <td>Status Change</td>
-                <td>Awaiting client reproduction logs</td>
-              </tr>
-              <tr>
-                <td>10:30:12</td>
-                <td>System</td>
-                <td>Auto-Prioritize</td>
-                <td>Derived P1 from High × High Matrix</td>
-              </tr>
-            </tbody>
-          </table>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Title</th>
+                  <th>Requester</th>
+                  <th>Assigned Agent</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: rgba(37, 99, 235, 0.08);">
+                  <td><strong>#TICK-8021</strong></td>
+                  <td>Core Payment Gateway 504 Timeout</td>
+                  <td>Acme Corp (Enterprise)</td>
+                  <td>David (DevOps Lead)</td>
+                  <td><span class="badge crit">P1 - Critical</span></td>
+                  <td><span class="badge prog">In Progress</span></td>
+                  <td>12 mins ago</td>
+                </tr>
+                <tr>
+                  <td><strong>#TICK-8024</strong></td>
+                  <td>PostgreSQL Read Replica Lag > 45s</td>
+                  <td>Data Analytics Team</td>
+                  <td>Sarah (DBA)</td>
+                  <td><span class="badge high">P2 - High</span></td>
+                  <td><span class="badge prog">In Progress</span></td>
+                  <td>45 mins ago</td>
+                </tr>
+                <tr>
+                  <td><strong>#TICK-8025</strong></td>
+                  <td>Kubernetes Pod CrashLoopBackOff in Staging</td>
+                  <td>QA Automation</td>
+                  <td>Alex (Infra)</td>
+                  <td><span class="badge high">P2 - High</span></td>
+                  <td><span class="badge open">Open</span></td>
+                  <td>1 hour ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- SCREEN 3: Ticket Detail & SLA Pause Clock (TicketDetailView) -->
+          <div class="screen-container" id="screen-2">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <div>
+                <div style="font-size: 17px; font-weight: 800; color: #ffffff;">#TICK-8021 — Core Payment Gateway 504 Timeout</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Department: DevOps & Infra • Requester: Acme Corp Enterprise Partner</div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn" style="background:#a855f7; font-size: 12px;">⏸ Pending Customer (Freeze SLA)</button>
+                <button class="btn" style="background:#10b981; font-size: 12px;">✓ Resolve Ticket</button>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+              <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 16px;">
+                <div style="font-size: 13px; font-weight: 700; color: #93c5fd; margin-bottom: 8px;">Incident Description & Reproduction Steps</div>
+                <p style="font-size: 12.5px; color: #cbd5e1; line-height: 1.6;">
+                  Production checkout service is returning HTTP 504 gateway timeouts when processing credit card settlements. Over 450 enterprise customer transactions are failing per minute. Immediate rollback or database failover required.
+                </p>
+                <div style="display: flex; gap: 12px; margin-top: 14px; font-size: 11.5px; color: #94a3b8;">
+                  <span><strong>Asset:</strong> PROD-API-CLUSTER-04</span>
+                  <span><strong>Site Location:</strong> US-East Virginia DC</span>
+                </div>
+              </div>
+
+              <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="font-size: 13px; font-weight: 700; color: #f87171;">⏱ Live SLA Target Monitor</div>
+                <div style="background: rgba(239, 68, 68, 0.12); padding: 10px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                  <div style="font-size: 11px; color: #f87171; font-weight: 700;">RESOLUTION SLA:</div>
+                  <div style="font-size: 20px; font-weight: 800; color: #ffffff;">24 Minutes Left</div>
+                  <div style="font-size: 10.5px; color: #94a3b8;">Deadline: 11:45 AM (Target: 2h 00m)</div>
+                </div>
+                <div style="font-size: 11.5px; color: #34d399;">✓ First Response Met (7 mins)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCREEN 4: Dual-Stream Communication (Public vs Internal Notes) -->
+          <div class="screen-container" id="screen-3">
+            <div style="display: flex; gap: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">
+              <div style="font-weight: 700; color: #38bdf8; font-size: 13.5px; border-bottom: 2px solid #38bdf8; padding-bottom: 6px;">
+                💬 Public Customer Thread
+              </div>
+              <div style="font-weight: 700; color: #fbbf24; font-size: 13.5px; padding-bottom: 6px;">
+                🔒 Staff Internal Notes (Amber Shielded)
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 8px; padding: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                  <span style="font-weight: 700; color: #60a5fa;">Public Reply &bull; David (DevOps Lead)</span>
+                  <span style="color: #94a3b8;">10:32 AM</span>
+                </div>
+                <div style="font-size: 12.5px; color: #f1f5f9;">
+                  "We have identified connection saturation on the payment broker. Staging hotfix v2.4.1 is being deployed now. Expected restoration time is 15 minutes."
+                </div>
+              </div>
+
+              <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; padding: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                  <span style="font-weight: 700; color: #fbbf24;">🔒 INTERNAL NOTE (SHIELDED FROM CUSTOMER) &bull; Sarah (Security)</span>
+                  <span style="color: #94a3b8;">10:35 AM</span>
+                </div>
+                <div style="font-size: 12.5px; color: #fde68a;">
+                  "Root cause: Redis master dropped TCP connections after TLS certificate rotation. Failover completed to secondary replica. DB locks cleared."
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCREEN 5: Create Ticket & 3x3 Dynamic Priority Matrix -->
+          <div class="screen-container" id="screen-4">
+            <div style="font-size: 16px; font-weight: 800; color: #ffffff; margin-bottom: 12px;">
+              Create New Enterprise Incident (Dynamic Priority Derivation)
+            </div>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <span class="form-label">Subject / Incident Summary</span>
+                <input class="form-input" value="Core Payment Gateway 504 Timeout on Checkout">
+              </div>
+
+              <div class="form-group">
+                <span class="form-label">Department</span>
+                <select class="form-input">
+                  <option selected>DevOps & Infrastructure</option>
+                  <option>Security Operations</option>
+                  <option>IT Service Desk</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <span class="form-label">Business Impact Level</span>
+                <select class="form-input">
+                  <option selected>High (Enterprise-wide service disruption)</option>
+                  <option>Medium (Departmental impact)</option>
+                  <option>Low (Individual user)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <span class="form-label">Service Urgency Level</span>
+                <select class="form-input">
+                  <option selected>High (Immediate critical response required)</option>
+                  <option>Medium (Standard operations)</option>
+                  <option>Low (Routine maintenance)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 12px; margin-top: 14px; display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <div style="font-size: 11px; font-weight: 700; color: #f87171; text-transform: uppercase;">Dynamically Computed Priority:</div>
+                <div style="font-size: 16px; font-weight: 800; color: #ffffff;">P1 - CRITICAL (15m Response / 2h Resolution)</div>
+              </div>
+              <button class="btn" style="background:#2563eb;">Create Incident</button>
+            </div>
+          </div>
+
+          <!-- SCREEN 6: Immutable Chronological Audit Trail -->
+          <div class="screen-container" id="screen-5">
+            <div style="font-size: 16px; font-weight: 800; color: #ffffff; margin-bottom: 12px;">
+              Immutable ISO 27001 Audit Trail (#TICK-8021)
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Actor / Role</th>
+                  <th>Action</th>
+                  <th>Previous State</th>
+                  <th>New State</th>
+                  <th>Mandatory Justification</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10:45:12</td>
+                  <td>David (Team Lead)</td>
+                  <td>Reassigned</td>
+                  <td>Unassigned Pool</td>
+                  <td>Sarah (Senior DBA)</td>
+                  <td>Workload balancing for P1 incident escalation</td>
+                </tr>
+                <tr>
+                  <td>10:30:00</td>
+                  <td>System Engine</td>
+                  <td>SLA Initialized</td>
+                  <td>None</td>
+                  <td>Active Timers</td>
+                  <td>Calculated P1 SLA based on High × High Matrix</td>
+                </tr>
+                <tr>
+                  <td>10:29:45</td>
+                  <td>Acme Corp Partner</td>
+                  <td>Ticket Lodged</td>
+                  <td>None</td>
+                  <td>Open Pool</td>
+                  <td>Portal API ticket creation webhook</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- SCREEN 7: Executive Reports & Analytics -->
+          <div class="screen-container" id="screen-6">
+            <div style="font-size: 16px; font-weight: 800; color: #ffffff; margin-bottom: 12px;">
+              Executive Operations & SLA Compliance Analytics
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+              <div class="kpi-card" style="padding: 16px;">
+                <span class="kpi-lbl">SLA Compliance Target</span>
+                <span class="kpi-val" style="color: #34d399;">98.6%</span>
+                <span style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Goal: &gt; 95% threshold</span>
+              </div>
+              <div class="kpi-card" style="padding: 16px;">
+                <span class="kpi-lbl">Mean Time to Resolution (MTTR)</span>
+                <span class="kpi-val" style="color: #60a5fa;">1.8h</span>
+                <span style="font-size: 11px; color: #34d399; margin-top: 4px;">↓ 40% reduction vs Q3</span>
+              </div>
+              <div class="kpi-card" style="padding: 16px;">
+                <span class="kpi-lbl">Customer CSAT Average</span>
+                <span class="kpi-val" style="color: #fbbf24;">4.8 / 5.0</span>
+                <span style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Based on 124 reviews</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCREEN 8: Local Backend API Diagnostics -->
+          <div class="screen-container" id="screen-7">
+            <div style="font-size: 16px; font-weight: 800; color: #ffffff; margin-bottom: 12px;">
+              Local Backend API Diagnostic Console (Port 8080)
+            </div>
+            <div style="background: #060a12; border: 1px solid var(--card-border); border-radius: 8px; padding: 16px; font-family: Consolas, monospace; font-size: 12.5px; color: #93c5fd; line-height: 1.8;">
+              <div>[HEALTH CHECK] Connecting to http://localhost:8080/api/health ... <span style="color:#34d399;">200 OK (11ms)</span></div>
+              <div>[ROUTING] Active Target: <span style="color:#ffffff;">http://localhost:8080/api</span></div>
+              <div>[DATABASE] Local Spring Boot MySQL Connection: <span style="color:#34d399;">CONNECTED</span></div>
+              <div>[FAILOVER RESILIENCE] In-Memory Mock Fallback Engine: <span style="color:#fbbf24;">STANDBY READY</span></div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <!-- ================= SCENE 6: Local Backend Integration ================= -->
-    <div class="scene" id="scene-5">
-      <div class="badge-tag">06 / Backend Integration & Resilience</div>
-      <h1 class="scene-title">Local REST API with Fault-Tolerant Fallback</h1>
-      <p class="scene-desc">Plugs straight into your local Spring Boot or Node.js server with live ping diagnostics and intelligent fallback.</p>
-      
-      <div class="scene-body">
-        <div class="glass-card">
-          <h3>🔌 Live REST Endpoints</h3>
-          <div style="font-family: Consolas, monospace; font-size: 12px; line-height: 1.8; color: #93c5fd; background: #060b18; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-            <div><span style="color:#34d399;">GET</span>  /api/health &rarr; <span style="color:#94a3b8;">{ "status": "UP", "db": "CONNECTED" }</span></div>
-            <div><span style="color:#60a5fa;">GET</span>  /api/tickets &rarr; <span style="color:#94a3b8;">Pageable list with search & filters</span></div>
-            <div><span style="color:#f59e0b;">POST</span> /api/tickets &rarr; <span style="color:#94a3b8;">Create ticket with dynamic matrix</span></div>
-            <div><span style="color:#c084fc;">PUT</span>  /api/tickets/:id/status &rarr; <span style="color:#94a3b8;">Execute SLA pause/resume</span></div>
-            <div><span style="color:#f43f5e;">PUT</span>  /api/tickets/:id/assign &rarr; <span style="color:#94a3b8;">Assignment with audit reason</span></div>
-          </div>
-        </div>
-
-        <div class="glass-card">
-          <h3>🛡️ Graceful Degraded Mode</h3>
-          <p style="font-size: 13.5px; color: #cbd5e1; line-height: 1.6;">
-            If the local backend server is offline during initial frontend testing or UI evaluations, the application automatically engages the in-memory mock service.
-          </p>
-          <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 12px; margin-top: 6px;">
-            <div style="font-size: 12px; font-weight: 700; color: #34d399;">Active Backend Target:</div>
-            <div style="font-size: 14px; font-family: Consolas, monospace; color: #ffffff; margin-top: 2px;">http://localhost:8080/api</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= SCENE 7: Engineering Sign-off & ROI ================= -->
-    <div class="scene" id="scene-6">
-      <div class="badge-tag">07 / Executive Sign-off & Deliverables</div>
-      <h1 class="scene-title">Production-Ready Delivery & ROI</h1>
-      <p class="scene-desc">Complete requirement fulfillment, zero technical debt, fully documented code, and verified GitHub repository.</p>
-      
-      <div class="scene-body">
-        <div class="glass-card">
-          <h3>📊 Anticipated Business & Engineering Impact</h3>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div style="background: rgba(37,99,235,0.1); padding: 12px; border-radius: 8px;">
-              <div style="font-size: 24px; font-weight: 800; color: #60a5fa;">&gt; 98.5%</div>
-              <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">SLA Compliance</div>
-            </div>
-            <div style="background: rgba(16,185,129,0.1); padding: 12px; border-radius: 8px;">
-              <div style="font-size: 24px; font-weight: 800; color: #34d399;">- 40%</div>
-              <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Mean Time to Resolution</div>
-            </div>
-            <div style="background: rgba(245,158,11,0.1); padding: 12px; border-radius: 8px;">
-              <div style="font-size: 24px; font-weight: 800; color: #fbbf24;">100%</div>
-              <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Audit Trail Coverage</div>
-            </div>
-            <div style="background: rgba(244,63,94,0.1); padding: 12px; border-radius: 8px;">
-              <div style="font-size: 24px; font-weight: 800; color: #fb7185;">0 Bugs</div>
-              <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Static Analysis Warnings</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="glass-card" style="text-align: center; justify-content: center; align-items: center; padding: 24px;">
-          <h3 style="font-size: 18px; color: #ffffff;">Git Repository Target</h3>
-          <p style="font-family: Consolas, monospace; font-size: 14px; color: #38bdf8; margin: 10px 0;">
-            github.com/vigneshkrishnan4783/Enterprise-Ticket-Management-System-FD
-          </p>
-          <div style="font-size: 12.5px; color: #94a3b8; max-width: 380px;">
-            Branch <strong>main</strong> is synchronized with all enterprise models, responsive desktop views, REST services, and test suites.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Interactive Subtitle Bar -->
-    <div class="subtitle-bar">
-      <div class="speaker-avatar">🎙️</div>
-      <div class="subtitle-content">
-        <div class="subtitle-role">
-          <span>AI Technical Presenter</span>
-          <div class="sound-bars" id="sound-indicator" style="display: none;">
-            <div class="sound-bar"></div>
-            <div class="sound-bar"></div>
-            <div class="sound-bar"></div>
-          </div>
-        </div>
-        <div class="subtitle-text" id="subtitle-text">
-          Click "Play Video Voiceover" below to start the automated 1080p executive walkthrough for your Team Lead.
+    <!-- Bottom Audio Subtitle Bar -->
+    <div class="narration-bar">
+      <div class="voice-avatar">🎙️</div>
+      <div class="narr-meta">
+        <div class="narr-tag" id="narr-tag">AI Voice Tour &bull; Screen 1 of 8</div>
+        <div class="narr-text" id="narr-text">
+          Click "Play UI Walkthrough" below to begin the live screen-by-screen tour of our developed Flutter application.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Control Bar -->
-  <div class="controls-wrapper">
-    <button class="btn-ctrl" id="lang-btn" onclick="toggleLanguage()" style="background: linear-gradient(135deg, #059669, #10b981);">
+  <!-- Bottom Interactive Controls -->
+  <div class="controls">
+    <button class="btn lang" id="lang-btn" onclick="toggleLanguage()">
       <span id="lang-icon">🌐</span> <span id="lang-text">தமிழ் (Tamil Voice)</span>
     </button>
-    <button class="btn-ctrl" id="play-btn" onclick="togglePlay()">
-      <span id="play-icon">▶</span> <span id="play-text">Play Team Lead Presentation</span>
+    <button class="btn" id="play-btn" onclick="togglePlay()">
+      <span id="play-icon">▶</span> <span id="play-text">Play UI Walkthrough</span>
     </button>
-    <button class="btn-ctrl secondary" onclick="prevScene()">⏮ Prev</button>
-    <button class="btn-ctrl secondary" onclick="nextScene()">Next ⏭</button>
-    <span class="progress-text" id="scene-indicator">Scene 1 of 7</span>
-    
-    <select class="voice-select" id="voice-select" onchange="changeVoice()">
-      <option value="">Select AI Voice...</option>
-    </select>
-
-    <button class="btn-ctrl secondary" onclick="toggleFullScreen()">⛶ 1080p Fullscreen</button>
-    
-    <button class="btn-ctrl record" id="rec-btn" onclick="startHdRecording()">
-      <span id="rec-icon">🔴</span> <span id="rec-text">Record & Export 1080p Video</span>
+    <button class="btn secondary" onclick="prevScreen()">⏮ Prev Screen</button>
+    <button class="btn secondary" onclick="nextScreen()">Next Screen ⏭</button>
+    <span style="font-size: 12px; color: #94a3b8; font-weight: 700; padding: 0 4px;" id="screen-num">1 / 8</span>
+    <button class="btn secondary" onclick="toggleFullScreen()">⛶ 1080p Fullscreen</button>
+    <button class="btn rec" id="rec-btn" onclick="startRecording()">
+      <span id="rec-icon">🔴</span> <span id="rec-text">Record & Export 1080p MP4</span>
     </button>
   </div>
 
   <script>
-    let currentLanguage = 'en'; // 'en' or 'ta'
-
-    // Executive English voiceover narration tailored for Team Lead and Engineering Leadership
-    const narrationScriptsEn = [
-      "Good morning, Team Lead. Today, I am proud to present the completed Enterprise Ticket Management System frontend. Engineered in Flutter Web specifically for high-resolution desktop environments, this system brings enterprise-grade governance, strict SLA compliance, and zero-compromise security to our organization's IT service operations.",
-      "Looking at the Desktop Operations Hub, the entire user interface has been customized for 1920 by 1080 desktop resolutions. The responsive layout features high-density KPI metrics cards, dedicated dispatch queues for triage and team workloads, and an instant breach warning banner that alerts dispatchers when incidents approach their resolution limits.",
-      "Data governance is enforced through seven distinct Role-Based Personas. Customers are isolated strictly to their own tickets, while Support Agents, Team Leads, Department Managers, and Compliance Auditors operate under strict least-privilege principles. The interactive persona switcher allows instant verification of scoping rules across all user roles.",
-      "Our intelligent SLA engine eliminates guesswork with an automated three-by-three priority matrix. Derived mathematically from business impact and service urgency, priority drives independent response and resolution clocks. Furthermore, per specification rule FR-016, moving a ticket to Pending Customer prompts for troubleshooting details and automatically freezes the resolution clock.",
-      "Collaboration is streamlined through dual-stream communications. Support staff can send public updates to customers or record encrypted internal staff notes that are shielded from client visibility. Every status change, assignment update, and override reason is immutably logged into an ISO-compliant audit trail.",
-      "Connecting to our local infrastructure is seamless. The application includes a dedicated REST API service configured for our local backend on port 8080. It features automated connectivity health checks and includes an intelligent in-memory mock fallback, ensuring uninterrupted development and smooth offline testing.",
-      "In summary, this implementation delivers on every requirement in the specification with zero static analysis warnings and complete architecture test coverage. The codebase is fully committed to our main GitHub repository. Thank you, Team Lead, and I look forward to your review and feedback."
-    ];
-
-    // தமிழ் (Tamil) voiceover narration
-    const narrationScriptsTa = [
-      "வணக்கம். இது என்டர்பிரைஸ் டிக்கெட் மேனேஜ்மென்ட் சிஸ்டம். பெரிய நிறுவனங்களில் வாடிக்கையாளர் புகார்கள் மற்றும் தொழில்நுட்ப சிக்கல்களை சிறந்த முறையில் தீர்க்க இந்த சிஸ்டம் ஃப்ளட்டர் வெப் மூலம் உருவாக்கப்பட்டுள்ளது.",
-      "இரண்டாவது காட்சியில், 1920 க்கு 1080 முழு ஹெச்டி டெஸ்க்டாப் திரையை நீங்கள் காண்கிறீர்கள். இதில் முக்கிய அளவீடுகள், ஆக்டிவ் டிக்கெட்டுகள், மற்றும் காலக்கெடு முடியும் டிக்கெட்டுகளுக்கான சிவப்பு எச்சரிக்கை பேனர் ஆகியவை உடனுக்குடன் காண்பிக்கப்படுகின்றன.",
-      "மூன்றாவது அம்சமாக, இதில் 7 வகையான நிறுவன பயனர்கள் உள்ளனர். வாடிக்கையாளர், சப்போர்ட் ஏஜென்ட், டீம் லீட், மேலாளர், அட்மின் மற்றும் ஆடிட்டர். ஒவ்வொருவருக்கும் அவர்களின் பதவிக்கு ஏற்ற தகவல்கள் மட்டுமே தெரியும் பாதுகாப்பு முறை உள்ளது.",
-      "நான்காவது, மூன்றுக்கு மூன்று பிரையாரிட்டி மேட்ரிக்ஸ். பிரச்சனையின் அவசரத்தையும் பாதிப்பையும் கணக்கிட்டு தானாகவே P1 கிரிட்டிகல் முதல் P4 வரை தரம் பிரிக்கப்படும். வாடிக்கையாளர் பதிலுக்காக காத்திருக்கும் போது, எஸ்.எல்.ஏ காலக்கெடு கடிகாரம் தானாகவே நிறுத்தப்படும்.",
-      "ஐந்தாவது, வாடிக்கையாளர்களுக்கான பொது உரையாடலும், அலுவலக ஊழியர்களுக்கான ரகசிய உள் குறிப்புகளும் தனித்தனியாக பிரிக்கப்பட்டுள்ளன. யார், எப்போது, என்ன மாற்றம் செய்தார் என்ற முழுமையான ஆடிட் லாக் இதில் பாதுகாக்கப்படுகிறது.",
-      "ஆறாவது, நமது லோக்கல் போர்ட் 8080 ஸ்பிரிங் பூட் பேக்கெண்டுடன் இது எளிதாக இணைகிறது. பேக்கண்ட் ஆஃப்லைனில் இருந்தாலும், உள்ளமைக்கப்பட்ட மாக் சர்வீஸ் மூலம் இந்த ஆப் தடையின்றி இயங்கும்.",
-      "இறுதியாக, இந்த திட்டத்தின் அனைத்து கோப்புகளும் கிட்ஹப் மெயின் பிராஞ்சில் பதிவேற்றம் செய்யப்பட்டுள்ளன. எந்தவித எச்சரிக்கைகளும் இன்றி முழுமையாக இயங்குகிறது. நன்றி."
-    ];
-
-    function getActiveScripts() {
-      return currentLanguage === 'ta' ? narrationScriptsTa : narrationScriptsEn;
-    }
-
-    function toggleLanguage() {
-      if (currentLanguage === 'en') {
-        currentLanguage = 'ta';
-        document.getElementById('lang-text').innerText = 'English Voice (ஆங்கிலம்)';
-        document.getElementById('play-text').innerText = 'தமிழில் விளக்கத்தை இயக்கு';
-      } else {
-        currentLanguage = 'en';
-        document.getElementById('lang-text').innerText = 'தமிழ் (Tamil Voice)';
-        document.getElementById('play-text').innerText = 'Play Team Lead Presentation';
-      }
-      showScene(currentScene);
-      populateVoices();
-      if (isPlaying) speakCurrentScene();
-    }
-
-    let currentScene = 0;
+    let currentLang = 'en'; // 'en' or 'ta'
+    let currentIdx = 0;
     let isPlaying = false;
     let synth = window.speechSynthesis;
     let utterance = null;
     let mediaRecorder = null;
     let recordedChunks = [];
-    let selectedVoice = null;
 
-    function showScene(index) {
-      document.querySelectorAll('.scene').forEach((s, idx) => {
-        s.classList.toggle('active', idx === index);
-      });
-      currentScene = index;
-      document.getElementById('scene-indicator').innerText = `Scene ${index + 1} of 7`;
-      document.getElementById('subtitle-text').innerText = getActiveScripts()[index];
-      
-      // Update top progress bar
-      const progressPercent = ((index + 1) / 7) * 100;
-      document.getElementById('timeline-progress').style.width = `${progressPercent}%`;
+    const screenTitles = [
+      "01 / Main Executive Dashboard (KPIs, Alert Banner & Recent Incidents)",
+      "02 / Ticket Queue Monitor (Desktop Table, Filters & Triage Pool)",
+      "03 / Ticket Detail View (SLA Countdown Target & Status Workflow)",
+      "04 / Dual-Stream Comms (Public Customer Chat vs Amber Internal Notes)",
+      "05 / Create Ticket View (Dynamic 3×3 Priority Derivation Matrix)",
+      "06 / Immutable Audit Trail (Chronological ISO 27001 State History)",
+      "07 / Executive Operations & SLA Analytics (MTTR & CSAT Breakdown)",
+      "08 / Local Backend Integration (Port 8080 Spring Boot Diagnostics)"
+    ];
+
+    const scriptEn = [
+      "Here is our main executive Dashboard UI. At the top, a prominent red alert banner warns dispatchers when tickets approach SLA limits. Below it, five high-density KPI cards display Total Active, In-Progress, Pending Customer, and At-Risk counts, alongside our real-time ticket dispatch table.",
+      "Next is the Ticket Queue Monitor. Designed for desktop workstations, operators can instantly filter by department, search by incident title, and organize tickets across dedicated queues including My Workload, Triage Pool, and SLA At-Risk incidents.",
+      "Looking at the Ticket Detail View for incident 8021, you can see the incident description and asset details on the left, and our live SLA Target Monitor on the right. Operators can execute one-click status transitions, including moving to Pending Customer, which freezes the SLA countdown.",
+      "Here is our Dual-Stream Communication system. In this view, customer-facing public replies are styled cleanly in blue, while staff-only internal notes are highlighted with an amber security badge and completely shielded from external client visibility.",
+      "This is the Create Ticket View featuring our dynamic three-by-three priority matrix. When an operator selects the business impact level and service urgency, the application mathematically computes the priority and displays the resulting response and resolution deadlines.",
+      "Next is the Immutable Audit Trail. Every single action, state transition, and team assignment override is logged chronologically with the actor's identity, timestamp, and mandatory justification reason, ensuring full ISO 27001 regulatory compliance.",
+      "Here are the Executive Reports and Analytics. Leadership can review overall SLA compliance percentages, mean time to resolution metrics, and customer CSAT ratings broken down across departments.",
+      "Finally, this is the Local Backend API Diagnostic view. The application connects directly to our local Spring Boot REST backend on port 8080 with automated health checks, while our intelligent in-memory mock service remains ready on standby for offline resilience."
+    ];
+
+    const scriptTa = [
+      "இது நாம் உருவாக்கிய மெயின் டேஷ்போர்டு திரை. மேலே உள்ள சிவப்பு நிற எச்சரிக்கை பேனர், எஸ்.எல்.ஏ காலக்கெடு முடியும் டிக்கெட்டுகளை உடனுக்குடன் காட்டுகிறது. கீழே உள்ள ஐந்து கார்டுகள் மொத்த டிக்கெட்டுகள், பணி நிலை மற்றும் 4.8 வாடிக்கையாளர் மதிப்பீட்டை தெளிவாக காட்டுகின்றன.",
+      "இரண்டாவது திரை: டிக்கெட் பட்டியல். இதில் துறை வாரியாக வடிகட்டவும், தேடவும் வசதிகள் உள்ளன. மேலும் 'என் பணிகள்', 'புதிய டிக்கெட்டுகள்', மற்றும் 'அவசர டிக்கெட்டுகள்' என தனித்தனி வரிசைகளில் எளிதாக பார்க்கலாம்.",
+      "மூன்றாவது திரை: டிக்கெட் விவரங்கள். இதில் சம்பவத்தின் முழு விவரம் மற்றும் வலதுபுறத்தில் நேரடி எஸ்.எல்.ஏ கடிகாரம் இயங்குகிறது. 'Pending Customer' நிலைக்கு மாற்றினால், காலக்கெடு கடிகாரம் தானாகவே நின்றுவிடும்.",
+      "நான்காவது திரை: இரட்டை தொடர்பு முறை. வாடிக்கையாளர்களுக்கு அனுப்பும் பொது செய்திகள் நீல நிறத்திலும், அலுவலக ஊழியர்கள் மட்டுமே பார்க்கும் ரகசிய குறிப்புகள் மஞ்சள் நிற பூட்டு குறியீட்டுடனும் பிரிக்கப்பட்டுள்ளன.",
+      "ஐந்தாவது திரை: புதிய டிக்கெட் பதிவு. இதில் உள்ள 3x3 மேட்ரிக்ஸ் மூலம், பாதிப்பு மற்றும் அவசரத்தை தேர்வு செய்தவுடன் தானாகவே P1 கிரிட்டிகல் முதல் P4 வரை முன்னுரிமை கணக்கிடப்படுகிறது.",
+      "ஆறாவது திரை: மாற்ற முடியாத ஆடிட் லாக். யார், எப்போது, என்ன மாற்றம் செய்தார் மற்றும் அதற்கான காரணம் என்ன என்பது நொடிப் பொழுதும் மாறாமல் துல்லியமாக பதிவு செய்யப்படுகிறது.",
+      "ஏழாவது திரை: நிர்வாக அறிக்கைகள். இதில் 98.6% எஸ்.எல்.ஏ வெற்றி விகிதம், சராசரி தீர்வு நேரம் (MTTR) மற்றும் வாடிக்கையாளர் மதிப்பீடுகள் வரைபடங்களாக காட்டப்படுகின்றன.",
+      "எட்டாவது திரை: லோக்கல் பேக்கெண்ட் இணைப்பு. போர்ட் 8080-ல் இயங்கும் நமது லோக்கல் ஸ்பிரிங் பூட் சர்வரோடு இது நேரடியாக இணைகிறது. சர்வர் ஆஃப்லைனில் இருந்தாலும் ஆப் தடையின்றி இயங்கும்."
+    ];
+
+    function getScripts() {
+      return currentLang === 'ta' ? scriptTa : scriptEn;
     }
 
-    function speakCurrentScene() {
+    function showScreen(idx) {
+      document.querySelectorAll('.screen-container').forEach((s, i) => {
+        s.classList.toggle('active', i === idx);
+      });
+      currentIdx = idx;
+      document.getElementById('screen-title').innerText = screenTitles[idx];
+      document.getElementById('screen-num').innerText = `${idx + 1} / 8`;
+      document.getElementById('narr-tag').innerText = `AI Voice Tour • Screen ${idx + 1} of 8`;
+      document.getElementById('narr-text').innerText = getScripts()[idx];
+      
+      const pct = ((idx + 1) / 8) * 100;
+      document.getElementById('timeline-bar').style.width = `${pct}%`;
+
+      // Highlight sidebar tab
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (idx === 0) document.getElementById('nav-dash').classList.add('active');
+      else if (idx === 1) document.getElementById('nav-tickets').classList.add('active');
+      else if (idx === 4) document.getElementById('nav-create').classList.add('active');
+      else if (idx === 6) document.getElementById('nav-reports').classList.add('active');
+    }
+
+    function speakCurrent() {
       if (!synth) return;
       synth.cancel();
 
-      const scripts = getActiveScripts();
-      utterance = new SpeechSynthesisUtterance(scripts[currentScene]);
+      const scripts = getScripts();
+      utterance = new SpeechSynthesisUtterance(scripts[currentIdx]);
       utterance.pitch = 1.0;
 
-      if (currentLanguage === 'ta') {
+      if (currentLang === 'ta') {
         utterance.rate = 0.90;
         utterance.lang = 'ta-IN';
         const voices = synth.getVoices();
-        const tamilVoice = voices.find(v => v.lang.startsWith('ta') || v.name.includes('Tamil') || v.name.includes('Valluvar'));
-        if (tamilVoice) utterance.voice = tamilVoice;
+        const v = voices.find(x => x.lang.startsWith('ta'));
+        if (v) utterance.voice = v;
       } else {
         utterance.rate = 0.93;
         utterance.lang = 'en-US';
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        } else {
-          const voices = synth.getVoices();
-          const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('David') || v.name.includes('George')));
-          if (preferred) utterance.voice = preferred;
-        }
+        const voices = synth.getVoices();
+        const v = voices.find(x => x.lang.startsWith('en') && (x.name.includes('Natural') || x.name.includes('Google') || x.name.includes('David')));
+        if (v) utterance.voice = v;
       }
 
-      utterance.onstart = () => {
-        document.getElementById('sound-indicator').style.display = 'inline-flex';
-      };
-
       utterance.onend = () => {
-        document.getElementById('sound-indicator').style.display = 'none';
         if (isPlaying) {
-          if (currentScene < 6) {
+          if (currentIdx < 7) {
             setTimeout(() => {
-              nextScene();
-              if (isPlaying) speakCurrentScene();
+              nextScreen();
+              if (isPlaying) speakCurrent();
             }, 1200);
           } else {
             isPlaying = false;
             document.getElementById('play-icon').innerText = '▶';
-            document.getElementById('play-text').innerText = currentLanguage === 'ta' ? 'மீண்டும் இயக்கு' : 'Replay Presentation';
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-              mediaRecorder.stop();
-            }
+            document.getElementById('play-text').innerText = currentLang === 'ta' ? 'மீண்டும் இயக்கு' : 'Replay UI Tour';
+            if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
           }
         }
-      };
-
-      utterance.onerror = () => {
-        document.getElementById('sound-indicator').style.display = 'none';
       };
 
       synth.speak(utterance);
@@ -946,66 +970,53 @@
         isPlaying = false;
         synth.cancel();
         document.getElementById('play-icon').innerText = '▶';
-        document.getElementById('play-text').innerText = currentLanguage === 'ta' ? 'தமிழில் விளக்கத்தை இயக்கு' : 'Play Team Lead Presentation';
-        document.getElementById('sound-indicator').style.display = 'none';
+        document.getElementById('play-text').innerText = currentLang === 'ta' ? 'விளக்கத்தை இயக்கு' : 'Play UI Walkthrough';
       } else {
         isPlaying = true;
         document.getElementById('play-icon').innerText = '⏸';
-        document.getElementById('play-text').innerText = currentLanguage === 'ta' ? 'நிறுத்து' : 'Pause';
-        speakCurrentScene();
+        document.getElementById('play-text').innerText = currentLang === 'ta' ? 'நிறுத்து' : 'Pause';
+        speakCurrent();
       }
     }
 
-    function nextScene() {
-      if (currentScene < 6) {
-        showScene(currentScene + 1);
-        if (isPlaying) speakCurrentScene();
+    function nextScreen() {
+      if (currentIdx < 7) {
+        showScreen(currentIdx + 1);
+        if (isPlaying) speakCurrent();
       }
     }
 
-    function prevScene() {
-      if (currentScene > 0) {
-        showScene(currentScene - 1);
-        if (isPlaying) speakCurrentScene();
+    function prevScreen() {
+      if (currentIdx > 0) {
+        showScreen(currentIdx - 1);
+        if (isPlaying) speakCurrent();
       }
+    }
+
+    function toggleLanguage() {
+      if (currentLang === 'en') {
+        currentLang = 'ta';
+        document.getElementById('lang-text').innerText = 'English Voice (ஆங்கிலம்)';
+        document.getElementById('play-text').innerText = 'விளக்கத்தை இயக்கு';
+      } else {
+        currentLang = 'en';
+        document.getElementById('lang-text').innerText = 'தமிழ் (Tamil Voice)';
+        document.getElementById('play-text').innerText = 'Play UI Walkthrough';
+      }
+      showScreen(currentIdx);
+      if (isPlaying) speakCurrent();
     }
 
     function toggleFullScreen() {
-      const elem = document.querySelector('.video-viewport');
+      const el = document.querySelector('.viewport');
       if (!document.fullscreenElement) {
-        elem.requestFullscreen().catch(err => alert(err.message));
+        el.requestFullscreen().catch(err => alert(err.message));
       } else {
         document.exitFullscreen();
       }
     }
 
-    // Voice Selector Population
-    function populateVoices() {
-      if (!synth) return;
-      const targetLang = currentLanguage === 'ta' ? 'ta' : 'en';
-      const voices = synth.getVoices().filter(v => v.lang.startsWith(targetLang));
-      const select = document.getElementById('voice-select');
-      select.innerHTML = `<option value="">Default AI Voice (${targetLang.toUpperCase()})</option>`;
-      voices.forEach((voice, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.innerText = `${voice.name} (${voice.lang})`;
-        select.appendChild(opt);
-      });
-    }
-
-    function changeVoice() {
-      const select = document.getElementById('voice-select');
-      const targetLang = currentLanguage === 'ta' ? 'ta' : 'en';
-      const voices = synth.getVoices().filter(v => v.lang.startsWith(targetLang));
-      if (select.value !== "") {
-        selectedVoice = voices[parseInt(select.value)];
-        if (isPlaying) speakCurrentScene();
-      }
-    }
-
-    // 1080p HD Screen & Audio Recording Function
-    async function startHdRecording() {
+    async function startRecording() {
       const recBtn = document.getElementById('rec-btn');
       const recText = document.getElementById('rec-text');
       const recIcon = document.getElementById('rec-icon');
@@ -1017,12 +1028,7 @@
 
       try {
         const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: {
-            displaySurface: "browser",
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-            frameRate: { ideal: 60 }
-          },
+          video: { width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 60 } },
           audio: true
         });
 
@@ -1032,15 +1038,12 @@
           : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : 'video/webm');
 
         mediaRecorder = new MediaRecorder(stream, { mimeType });
-
-        mediaRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) recordedChunks.push(e.data);
-        };
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
 
         mediaRecorder.onstop = () => {
-          recText.innerText = "Record & Export 1080p Video";
+          recText.innerText = "Record & Export 1080p MP4";
           recIcon.innerText = "🔴";
-          recBtn.style.background = "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)";
+          recBtn.style.background = "linear-gradient(135deg, #ef4444, #dc2626)";
 
           const blob = new Blob(recordedChunks, { type: mimeType });
           const url = URL.createObjectURL(blob);
@@ -1048,42 +1051,27 @@
           a.style.display = 'none';
           a.href = url;
           const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
-          a.download = `Enterprise-Ticket-System-TeamLead-1080p.${ext}`;
+          a.download = `Enterprise-Ticket-System-AppUI-1080p.${ext}`;
           document.body.appendChild(a);
           a.click();
-          setTimeout(() => {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          }, 100);
-
-          stream.getTracks().forEach(track => track.stop());
+          setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
+          stream.getTracks().forEach(t => t.stop());
         };
 
         mediaRecorder.start();
-        recText.innerText = "Stop & Save 1080p Video";
+        recText.innerText = "Stop & Save Video";
         recIcon.innerText = "⏹";
-        recBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
+        recBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
 
-        // Restart presentation from Scene 1
-        showScene(0);
+        showScreen(0);
         if (!isPlaying) togglePlay();
 
-        // Listen for user stopping screen share from Chrome bar
         stream.getVideoTracks()[0].onended = () => {
-          if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop();
-          }
+          if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
         };
-
       } catch (err) {
-        console.error("Recording error:", err);
-        alert("To record HD video, please allow screen sharing for this Chrome tab when prompted.");
+        alert("Please enable screen sharing with audio to record.");
       }
-    }
-
-    if (synth) {
-      synth.onvoiceschanged = populateVoices;
-      populateVoices();
     }
   </script>
 </body>
