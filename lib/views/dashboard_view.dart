@@ -284,13 +284,14 @@ class DashboardView extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
+                                    trailing: Wrap(
+                                      spacing: 4,
+                                      runSpacing: 4,
+                                      alignment: WrapAlignment.end,
+                                      crossAxisAlignment: WrapCrossAlignment.center,
                                       children: [
                                         PriorityBadge(priority: ticket.priority, isCompact: true),
-                                        const SizedBox(width: 6),
                                         StatusBadge(status: ticket.status, isCompact: true),
-                                        const SizedBox(width: 6),
                                         SlaCountdownBadge(ticket: ticket),
                                       ],
                                     ),
