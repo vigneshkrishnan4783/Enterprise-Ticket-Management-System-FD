@@ -74,37 +74,40 @@ class _TicketDetailViewState extends State<TicketDetailView> with SingleTickerPr
               color: AppTheme.surface,
               border: Border(bottom: BorderSide(color: AppTheme.border)),
             ),
-            child: Row(
-              children: [
-                OutlinedButton.icon(
-                  onPressed: widget.onBack,
-                  icon: const Icon(Icons.arrow_back_rounded, size: 16),
-                  label: const Text('Back'),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: widget.onBack,
+                    icon: const Icon(Icons.arrow_back_rounded, size: 16),
+                    label: const Text('Back'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 14),
-                Text(
-                  ticket.ticketNumber,
-                  style: const TextStyle(
-                    fontFamily: 'Consolas',
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                    color: AppTheme.primary,
+                  const SizedBox(width: 14),
+                  Text(
+                    ticket.ticketNumber,
+                    style: const TextStyle(
+                      fontFamily: 'Consolas',
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16,
+                      color: AppTheme.primary,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                PriorityBadge(priority: ticket.priority),
-                const SizedBox(width: 8),
-                StatusBadge(status: ticket.status),
-                const SizedBox(width: 8),
-                SlaCountdownBadge(ticket: ticket),
-                const Spacer(),
+                  const SizedBox(width: 10),
+                  PriorityBadge(priority: ticket.priority),
+                  const SizedBox(width: 8),
+                  StatusBadge(status: ticket.status),
+                  const SizedBox(width: 8),
+                  SlaCountdownBadge(ticket: ticket),
+                  const SizedBox(width: 24),
 
-                // Permitted Workflow Transition Actions
-                _buildWorkflowActionButtons(context, ticket, auth.currentUser),
-              ],
+                  // Permitted Workflow Transition Actions
+                  _buildWorkflowActionButtons(context, ticket, auth.currentUser),
+                ],
+              ),
             ),
           ),
 

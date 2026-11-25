@@ -79,17 +79,30 @@ class DashboardView extends StatelessWidget {
             ),
           ],
 
-          // KPI Summary Cards
+          // KPI Summary Cards (Fluidly Responsive on all Desktop Resolutions)
           LayoutBuilder(
             builder: (context, constraints) {
-              final isWide = constraints.maxWidth > 900;
+              final width = constraints.maxWidth;
+              int columns = 5;
+              double ratio = 1.7;
+              if (width < 650) {
+                columns = 2;
+                ratio = 1.5;
+              } else if (width < 1100) {
+                columns = 3;
+                ratio = 1.8;
+              } else {
+                columns = 5;
+                ratio = 1.7;
+              }
+
               return GridView.count(
-                crossAxisCount: isWide ? 5 : 2,
+                crossAxisCount: columns,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: isWide ? 1.6 : 1.8,
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: ratio,
                 children: [
                   _buildKpiCard(
                     title: 'Total Active',

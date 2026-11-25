@@ -57,45 +57,45 @@ class ReportsView extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // Overview KPI Row
-          Row(
-            children: [
-              Expanded(
-                child: _buildMetricCard(
-                  'SLA Compliance Rate',
-                  '$complianceRate%',
-                  'Target: > 95.0%',
-                  double.parse(complianceRate) >= 95 ? Colors.green.shade700 : AppTheme.priorityCritical,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildMetricCard(
-                  'Average Resolution Time',
-                  '3.4 Hours',
-                  '-18% vs Last Month',
-                  AppTheme.primary,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildMetricCard(
-                  'First Response Adherence',
-                  '97.2%',
-                  'Within configured SLA target',
-                  Colors.green.shade700,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildMetricCard(
-                  'Customer CSAT Score',
-                  '${ticketProvider.csatAverage} / 5.0',
-                  'Based on resolved tickets',
-                  Colors.amber.shade700,
-                ),
-              ),
-            ],
+          // Overview KPI Row (Responsive Grid across Desktop Resolutions)
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth >= 1000;
+              return GridView.count(
+                crossAxisCount: isWide ? 4 : 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: isWide ? 1.8 : 1.7,
+                children: [
+                  _buildMetricCard(
+                    'SLA Compliance Rate',
+                    '$complianceRate%',
+                    'Target: > 95.0%',
+                    double.parse(complianceRate) >= 95 ? Colors.green.shade700 : AppTheme.priorityCritical,
+                  ),
+                  _buildMetricCard(
+                    'Average Resolution Time',
+                    '3.4 Hours',
+                    '-18% vs Last Month',
+                    AppTheme.primary,
+                  ),
+                  _buildMetricCard(
+                    'First Response Adherence',
+                    '97.2%',
+                    'Within configured SLA target',
+                    Colors.green.shade700,
+                  ),
+                  _buildMetricCard(
+                    'Customer CSAT Score',
+                    '${ticketProvider.csatAverage} / 5.0',
+                    'Based on resolved tickets',
+                    Colors.amber.shade700,
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 24),
 

@@ -93,67 +93,71 @@ class TicketListView extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 // Secondary Filter Controls (Status, Priority, Department)
-                Row(
-                  children: [
-                    // Status Filter Dropdown
-                    _buildFilterDropdown<TicketStatus?>(
-                      value: ticketProvider.selectedStatus,
-                      hint: 'All Statuses',
-                      items: [
-                        const DropdownMenuItem(value: null, child: Text('All Statuses')),
-                        ...TicketStatus.values.map(
-                          (s) => DropdownMenuItem(value: s, child: Text(s.displayName)),
-                        ),
-                      ],
-                      onChanged: (val) => ticketProvider.setStatusFilter(val),
-                    ),
-                    const SizedBox(width: 10),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      // Status Filter Dropdown
+                      _buildFilterDropdown<TicketStatus?>(
+                        value: ticketProvider.selectedStatus,
+                        hint: 'All Statuses',
+                        items: [
+                          const DropdownMenuItem(value: null, child: Text('All Statuses')),
+                          ...TicketStatus.values.map(
+                            (s) => DropdownMenuItem(value: s, child: Text(s.displayName)),
+                          ),
+                        ],
+                        onChanged: (val) => ticketProvider.setStatusFilter(val),
+                      ),
+                      const SizedBox(width: 10),
 
-                    // Priority Filter Dropdown
-                    _buildFilterDropdown<TicketPriority?>(
-                      value: ticketProvider.selectedPriority,
-                      hint: 'All Priorities',
-                      items: [
-                        const DropdownMenuItem(value: null, child: Text('All Priorities')),
-                        ...TicketPriority.values.map(
-                          (p) => DropdownMenuItem(value: p, child: Text(p.displayName)),
-                        ),
-                      ],
-                      onChanged: (val) => ticketProvider.setPriorityFilter(val),
-                    ),
-                    const SizedBox(width: 10),
+                      // Priority Filter Dropdown
+                      _buildFilterDropdown<TicketPriority?>(
+                        value: ticketProvider.selectedPriority,
+                        hint: 'All Priorities',
+                        items: [
+                          const DropdownMenuItem(value: null, child: Text('All Priorities')),
+                          ...TicketPriority.values.map(
+                            (p) => DropdownMenuItem(value: p, child: Text(p.displayName)),
+                          ),
+                        ],
+                        onChanged: (val) => ticketProvider.setPriorityFilter(val),
+                      ),
+                      const SizedBox(width: 10),
 
-                    // Department Filter Dropdown
-                    _buildFilterDropdown<String?>(
-                      value: ticketProvider.selectedDepartmentId,
-                      hint: 'All Departments',
-                      items: [
-                        const DropdownMenuItem(value: null, child: Text('All Departments')),
-                        ...ticketProvider.departments.map(
-                          (d) => DropdownMenuItem(value: d.id, child: Text(d.name)),
-                        ),
-                      ],
-                      onChanged: (val) => ticketProvider.setDepartmentFilter(val),
-                    ),
-                    const Spacer(),
+                      // Department Filter Dropdown
+                      _buildFilterDropdown<String?>(
+                        value: ticketProvider.selectedDepartmentId,
+                        hint: 'All Departments',
+                        items: [
+                          const DropdownMenuItem(value: null, child: Text('All Departments')),
+                          ...ticketProvider.departments.map(
+                            (d) => DropdownMenuItem(value: d.id, child: Text(d.name)),
+                          ),
+                        ],
+                        onChanged: (val) => ticketProvider.setDepartmentFilter(val),
+                      ),
+                      const SizedBox(width: 16),
 
-                    // Reset Filters Button
-                    if (ticketProvider.selectedStatus != null ||
-                        ticketProvider.selectedPriority != null ||
-                        ticketProvider.selectedDepartmentId != null ||
-                        ticketProvider.searchQuery.isNotEmpty ||
-                        ticketProvider.activeTabFilter != 'ALL') ...[
-                      TextButton.icon(
-                        onPressed: () => ticketProvider.clearFilters(),
-                        icon: const Icon(Icons.clear_all_rounded, size: 16),
-                        label: const Text('Reset Filters'),
+                      // Reset Filters Button
+                      if (ticketProvider.selectedStatus != null ||
+                          ticketProvider.selectedPriority != null ||
+                          ticketProvider.selectedDepartmentId != null ||
+                          ticketProvider.searchQuery.isNotEmpty ||
+                          ticketProvider.activeTabFilter != 'ALL') ...[
+                        TextButton.icon(
+                          onPressed: () => ticketProvider.clearFilters(),
+                          icon: const Icon(Icons.clear_all_rounded, size: 16),
+                          label: const Text('Reset Filters'),
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                      Text(
+                        '${filteredTickets.length} ticket(s) found',
+                        style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500),
                       ),
                     ],
-                    Text(
-                      '${filteredTickets.length} ticket(s) found',
-                      style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
