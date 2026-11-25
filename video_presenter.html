@@ -799,6 +799,9 @@
 
   <!-- Bottom Control Bar -->
   <div class="controls-wrapper">
+    <button class="btn-ctrl" id="lang-btn" onclick="toggleLanguage()" style="background: linear-gradient(135deg, #059669, #10b981);">
+      <span id="lang-icon">🌐</span> <span id="lang-text">தமிழ் (Tamil Voice)</span>
+    </button>
     <button class="btn-ctrl" id="play-btn" onclick="togglePlay()">
       <span id="play-icon">▶</span> <span id="play-text">Play Team Lead Presentation</span>
     </button>
@@ -818,8 +821,10 @@
   </div>
 
   <script>
+    let currentLanguage = 'en'; // 'en' or 'ta'
+
     // Executive English voiceover narration tailored for Team Lead and Engineering Leadership
-    const narrationScripts = [
+    const narrationScriptsEn = [
       "Good morning, Team Lead. Today, I am proud to present the completed Enterprise Ticket Management System frontend. Engineered in Flutter Web specifically for high-resolution desktop environments, this system brings enterprise-grade governance, strict SLA compliance, and zero-compromise security to our organization's IT service operations.",
       "Looking at the Desktop Operations Hub, the entire user interface has been customized for 1920 by 1080 desktop resolutions. The responsive layout features high-density KPI metrics cards, dedicated dispatch queues for triage and team workloads, and an instant breach warning banner that alerts dispatchers when incidents approach their resolution limits.",
       "Data governance is enforced through seven distinct Role-Based Personas. Customers are isolated strictly to their own tickets, while Support Agents, Team Leads, Department Managers, and Compliance Auditors operate under strict least-privilege principles. The interactive persona switcher allows instant verification of scoping rules across all user roles.",
@@ -828,6 +833,36 @@
       "Connecting to our local infrastructure is seamless. The application includes a dedicated REST API service configured for our local backend on port 8080. It features automated connectivity health checks and includes an intelligent in-memory mock fallback, ensuring uninterrupted development and smooth offline testing.",
       "In summary, this implementation delivers on every requirement in the specification with zero static analysis warnings and complete architecture test coverage. The codebase is fully committed to our main GitHub repository. Thank you, Team Lead, and I look forward to your review and feedback."
     ];
+
+    // தமிழ் (Tamil) voiceover narration
+    const narrationScriptsTa = [
+      "வணக்கம். இது என்டர்பிரைஸ் டிக்கெட் மேனேஜ்மென்ட் சிஸ்டம். பெரிய நிறுவனங்களில் வாடிக்கையாளர் புகார்கள் மற்றும் தொழில்நுட்ப சிக்கல்களை சிறந்த முறையில் தீர்க்க இந்த சிஸ்டம் ஃப்ளட்டர் வெப் மூலம் உருவாக்கப்பட்டுள்ளது.",
+      "இரண்டாவது காட்சியில், 1920 க்கு 1080 முழு ஹெச்டி டெஸ்க்டாப் திரையை நீங்கள் காண்கிறீர்கள். இதில் முக்கிய அளவீடுகள், ஆக்டிவ் டிக்கெட்டுகள், மற்றும் காலக்கெடு முடியும் டிக்கெட்டுகளுக்கான சிவப்பு எச்சரிக்கை பேனர் ஆகியவை உடனுக்குடன் காண்பிக்கப்படுகின்றன.",
+      "மூன்றாவது அம்சமாக, இதில் 7 வகையான நிறுவன பயனர்கள் உள்ளனர். வாடிக்கையாளர், சப்போர்ட் ஏஜென்ட், டீம் லீட், மேலாளர், அட்மின் மற்றும் ஆடிட்டர். ஒவ்வொருவருக்கும் அவர்களின் பதவிக்கு ஏற்ற தகவல்கள் மட்டுமே தெரியும் பாதுகாப்பு முறை உள்ளது.",
+      "நான்காவது, மூன்றுக்கு மூன்று பிரையாரிட்டி மேட்ரிக்ஸ். பிரச்சனையின் அவசரத்தையும் பாதிப்பையும் கணக்கிட்டு தானாகவே P1 கிரிட்டிகல் முதல் P4 வரை தரம் பிரிக்கப்படும். வாடிக்கையாளர் பதிலுக்காக காத்திருக்கும் போது, எஸ்.எல்.ஏ காலக்கெடு கடிகாரம் தானாகவே நிறுத்தப்படும்.",
+      "ஐந்தாவது, வாடிக்கையாளர்களுக்கான பொது உரையாடலும், அலுவலக ஊழியர்களுக்கான ரகசிய உள் குறிப்புகளும் தனித்தனியாக பிரிக்கப்பட்டுள்ளன. யார், எப்போது, என்ன மாற்றம் செய்தார் என்ற முழுமையான ஆடிட் லாக் இதில் பாதுகாக்கப்படுகிறது.",
+      "ஆறாவது, நமது லோக்கல் போர்ட் 8080 ஸ்பிரிங் பூட் பேக்கெண்டுடன் இது எளிதாக இணைகிறது. பேக்கண்ட் ஆஃப்லைனில் இருந்தாலும், உள்ளமைக்கப்பட்ட மாக் சர்வீஸ் மூலம் இந்த ஆப் தடையின்றி இயங்கும்.",
+      "இறுதியாக, இந்த திட்டத்தின் அனைத்து கோப்புகளும் கிட்ஹப் மெயின் பிராஞ்சில் பதிவேற்றம் செய்யப்பட்டுள்ளன. எந்தவித எச்சரிக்கைகளும் இன்றி முழுமையாக இயங்குகிறது. நன்றி."
+    ];
+
+    function getActiveScripts() {
+      return currentLanguage === 'ta' ? narrationScriptsTa : narrationScriptsEn;
+    }
+
+    function toggleLanguage() {
+      if (currentLanguage === 'en') {
+        currentLanguage = 'ta';
+        document.getElementById('lang-text').innerText = 'English Voice (ஆங்கிலம்)';
+        document.getElementById('play-text').innerText = 'தமிழில் விளக்கத்தை இயக்கு';
+      } else {
+        currentLanguage = 'en';
+        document.getElementById('lang-text').innerText = 'தமிழ் (Tamil Voice)';
+        document.getElementById('play-text').innerText = 'Play Team Lead Presentation';
+      }
+      showScene(currentScene);
+      populateVoices();
+      if (isPlaying) speakCurrentScene();
+    }
 
     let currentScene = 0;
     let isPlaying = false;
@@ -843,7 +878,7 @@
       });
       currentScene = index;
       document.getElementById('scene-indicator').innerText = `Scene ${index + 1} of 7`;
-      document.getElementById('subtitle-text').innerText = narrationScripts[index];
+      document.getElementById('subtitle-text').innerText = getActiveScripts()[index];
       
       // Update top progress bar
       const progressPercent = ((index + 1) / 7) * 100;
@@ -854,17 +889,26 @@
       if (!synth) return;
       synth.cancel();
 
-      utterance = new SpeechSynthesisUtterance(narrationScripts[currentScene]);
-      utterance.rate = 0.93; // Deliberate, clear, authoritative executive pacing
+      const scripts = getActiveScripts();
+      utterance = new SpeechSynthesisUtterance(scripts[currentScene]);
       utterance.pitch = 1.0;
-      utterance.lang = 'en-US';
 
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      } else {
+      if (currentLanguage === 'ta') {
+        utterance.rate = 0.90;
+        utterance.lang = 'ta-IN';
         const voices = synth.getVoices();
-        const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('David') || v.name.includes('George')));
-        if (preferred) utterance.voice = preferred;
+        const tamilVoice = voices.find(v => v.lang.startsWith('ta') || v.name.includes('Tamil') || v.name.includes('Valluvar'));
+        if (tamilVoice) utterance.voice = tamilVoice;
+      } else {
+        utterance.rate = 0.93;
+        utterance.lang = 'en-US';
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        } else {
+          const voices = synth.getVoices();
+          const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('David') || v.name.includes('George')));
+          if (preferred) utterance.voice = preferred;
+        }
       }
 
       utterance.onstart = () => {
@@ -882,7 +926,7 @@
           } else {
             isPlaying = false;
             document.getElementById('play-icon').innerText = '▶';
-            document.getElementById('play-text').innerText = 'Replay Presentation';
+            document.getElementById('play-text').innerText = currentLanguage === 'ta' ? 'மீண்டும் இயக்கு' : 'Replay Presentation';
             if (mediaRecorder && mediaRecorder.state === 'recording') {
               mediaRecorder.stop();
             }
@@ -902,12 +946,12 @@
         isPlaying = false;
         synth.cancel();
         document.getElementById('play-icon').innerText = '▶';
-        document.getElementById('play-text').innerText = 'Play Team Lead Presentation';
+        document.getElementById('play-text').innerText = currentLanguage === 'ta' ? 'தமிழில் விளக்கத்தை இயக்கு' : 'Play Team Lead Presentation';
         document.getElementById('sound-indicator').style.display = 'none';
       } else {
         isPlaying = true;
         document.getElementById('play-icon').innerText = '⏸';
-        document.getElementById('play-text').innerText = 'Pause';
+        document.getElementById('play-text').innerText = currentLanguage === 'ta' ? 'நிறுத்து' : 'Pause';
         speakCurrentScene();
       }
     }
@@ -938,9 +982,10 @@
     // Voice Selector Population
     function populateVoices() {
       if (!synth) return;
-      const voices = synth.getVoices().filter(v => v.lang.startsWith('en'));
+      const targetLang = currentLanguage === 'ta' ? 'ta' : 'en';
+      const voices = synth.getVoices().filter(v => v.lang.startsWith(targetLang));
       const select = document.getElementById('voice-select');
-      select.innerHTML = '<option value="">Default AI Voice</option>';
+      select.innerHTML = `<option value="">Default AI Voice (${targetLang.toUpperCase()})</option>`;
       voices.forEach((voice, i) => {
         const opt = document.createElement('option');
         opt.value = i;
@@ -951,7 +996,8 @@
 
     function changeVoice() {
       const select = document.getElementById('voice-select');
-      const voices = synth.getVoices().filter(v => v.lang.startsWith('en'));
+      const targetLang = currentLanguage === 'ta' ? 'ta' : 'en';
+      const voices = synth.getVoices().filter(v => v.lang.startsWith(targetLang));
       if (select.value !== "") {
         selectedVoice = voices[parseInt(select.value)];
         if (isPlaying) speakCurrentScene();
