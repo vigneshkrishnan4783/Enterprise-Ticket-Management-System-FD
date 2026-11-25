@@ -356,7 +356,10 @@
     <button class="btn-ctrl secondary" onclick="prevScene()">⏮ Prev Scene</button>
     <button class="btn-ctrl secondary" onclick="nextScene()">Next Scene ⏭</button>
     <span class="progress-text" id="scene-indicator">Scene 1 of 7</span>
-    <button class="btn-ctrl secondary" onclick="toggleFullScreen()">⛶ Fullscreen</button>
+    <button class="btn-ctrl secondary" onclick="toggleFullScreen()">⛶ Full HD (1080p) Fullscreen</button>
+    <button class="btn-ctrl" id="rec-btn" onclick="startHdRecording()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border: 1px solid #f87171;">
+      <span id="rec-icon">🔴</span> <span id="rec-text">Record & Download HD Video</span>
+    </button>
   </div>
 
   <script>
@@ -374,6 +377,8 @@
     let isPlaying = false;
     let synth = window.speechSynthesis;
     let utterance = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
 
     function showScene(index) {
       document.querySelectorAll('.scene').forEach((s, idx) => {
@@ -409,6 +414,9 @@
             isPlaying = false;
             document.getElementById('play-icon').innerText = '▶';
             document.getElementById('play-text').innerText = 'Replay Video';
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+              mediaRecorder.stop();
+            }
           }
         }
       };
@@ -450,6 +458,83 @@
         elem.requestFullscreen().catch(err => alert(err.message));
       } else {
         document.exitFullscreen();
+      }
+    }
+
+    // 1080p HD Screen & Audio Recording Function
+    async function startHdRecording() {
+      const recBtn = document.getElementById('rec-btn');
+      const recText = document.getElementById('rec-text');
+      const recIcon = document.getElementById('rec-icon');
+
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            displaySurface: "browser",
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            frameRate: { ideal: 60 }
+          },
+          audio: true
+        });
+
+        recordedChunks = [];
+        const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+          ? 'video/webm;codecs=vp9,opus'
+          : (MediaRecorder.isTypeSupported('video/mp4') ? 'video/mp4' : 'video/webm');
+
+        mediaRecorder = new MediaRecorder(stream, { mimeType });
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          recText.innerText = "Record & Download HD Video";
+          recIcon.innerText = "🔴";
+          recBtn.style.background = "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)";
+
+          const blob = new Blob(recordedChunks, { type: mimeType });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+          a.download = `Enterprise-Ticket-System-1080p-HD.${ext}`;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        recText.innerText = "Stop & Save HD Video";
+        recIcon.innerText = "⏹";
+        recBtn.style.background = "linear-gradient(135deg, #16a34a 0%, #15803d 100%)";
+
+        // Restart presentation from Scene 1
+        showScene(0);
+        if (!isPlaying) togglePlay();
+
+        // Listen for user stopping screen share from Chrome bar
+        stream.getVideoTracks()[0].onended = () => {
+          if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+          }
+        };
+
+      } catch (err) {
+        console.error("Recording error:", err);
+        alert("To record HD video, please allow screen sharing for this Chrome tab when prompted.");
       }
     }
 
