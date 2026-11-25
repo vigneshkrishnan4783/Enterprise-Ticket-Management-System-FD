@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Ticket Management System</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --primary-hover: #172554;
+      --background: #f8fafc;
+      --surface: #ffffff;
+      --surface-muted: #f1f5f9;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --status-open: #2563eb;
+      --status-assigned: #7c3aed;
+      --status-in-progress: #d97706;
+      --status-pending-cust: #ea580c;
+      --status-resolved: #16a34a;
+      --status-reopened: #dc2626;
+      --prio-critical: #e11d48;
+      --prio-high: #f97316;
+      --prio-medium: #2563eb;
+      --prio-low: #64748b;
+      --internal-bg: #fffbeb;
+      --internal-border: #fde68a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--background); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+    
+    /* Layout */
+    .sidebar { width: 250px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+    .brand { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+    .brand-logo { width: 36px; height: 36px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px; }
+    .brand-text h1 { font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+    .brand-text p { font-size: 11px; color: var(--text-muted); }
+    
+    .nav-list { list-style: none; padding: 14px 10px; flex: 1; overflow-y: auto; }
+    .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text-muted); transition: all 0.15s; }
+    .nav-item:hover { background: var(--surface-muted); color: var(--text-main); }
+    .nav-item.active { background: #eff6ff; color: var(--primary); font-weight: 600; }
+    .nav-badge { background: #dbeafe; color: var(--primary); font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 12px; }
+    .nav-badge.danger { background: #ffe4e6; color: var(--prio-critical); }
+    
+    .user-footer { padding: 14px; margin: 12px; background: var(--surface-muted); border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+    .user-info p:first-child { font-size: 12px; font-weight: 600; }
+    .user-info p:last-child { font-size: 10px; color: var(--text-muted); }
+
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    
+    /* Header */
+    .header { height: 64px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; gap: 16px; flex-shrink: 0; }
+    .header h2 { font-size: 17px; font-weight: 700; }
+    .search-input { width: 320px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; outline: none; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    
+    .status-pill { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; cursor: pointer; }
+    .status-pill.online { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #d97706; }
+    .status-pill.online .status-dot { background: #16a34a; }
+    
+    .role-select { background: var(--surface-muted); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 500; cursor: pointer; outline: none; }
+    .btn-primary { background: var(--primary); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    /* Content Area */
+    .content { flex: 1; overflow-y: auto; padding: 24px; }
+    
+    /* Alert banner */
+    .alert-banner { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .alert-text h4 { color: var(--prio-critical); font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .alert-text p { color: var(--text-muted); font-size: 12px; }
+    
+    /* KPI Cards */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+    .kpi-title { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+    .kpi-val { font-size: 26px; font-weight: 800; color: var(--text-main); }
+    .kpi-val.primary { color: var(--primary); }
+    .kpi-val.warning { color: var(--prio-high); }
+    .kpi-val.danger { color: var(--prio-critical); }
+    .kpi-val.success { color: var(--status-resolved); }
+    
+    /* Two-col Dashboard */
+    .dash-columns { display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .card-title { font-size: 14px; font-weight: 700; }
+    
+    /* Progress Bars */
+    .prog-row { margin-bottom: 14px; }
+    .prog-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+    .bar { height: 6px; background: var(--surface-muted); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; }
+    
+    /* Tickets Table */
+    .ticket-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .ticket-table th { text-align: left; padding: 10px 12px; color: var(--text-muted); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    .ticket-table td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .ticket-table tr:hover { background: #f8fafc; cursor: pointer; }
+    .t-num { font-family: Consolas, monospace; font-weight: 700; color: var(--primary); font-size: 12px; }
+    .t-sub { font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+    .t-cat { font-size: 11px; color: var(--text-muted); }
+    
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+    .badge-open { background: #dbeafe; color: var(--status-open); }
+    .badge-assigned { background: #f3e8ff; color: var(--status-assigned); }
+    .badge-progress { background: #fef3c7; color: var(--status-in-progress); }
+    .badge-pending { background: #ffedd5; color: var(--status-pending-cust); }
+    .badge-resolved { background: #dcfce7; color: var(--status-resolved); }
+    .badge-reopened { background: #fee2e2; color: var(--status-reopened); }
+    
+    .badge-crit { background: #ffe4e6; color: var(--prio-critical); }
+    .badge-high { background: #ffedd5; color: var(--prio-high); }
+    .badge-med { background: #dbeafe; color: var(--prio-medium); }
+    .badge-low { background: #f1f5f9; color: var(--prio-low); }
+
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+    .modal { background: var(--surface); border-radius: 12px; width: 680px; max-width: 90%; max-height: 90vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+    .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+    .form-control:focus { border-color: var(--primary); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .matrix-box { background: var(--surface-muted); padding: 14px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">T</div>
+      <div class="brand-text">
+        <h1>ENTERPRISE</h1>
+        <p>Ticket Management System</p>
+      </div>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item active" onclick="switchNav('dash', this)">
+        <span>📊 Operations Dashboard</span>
+      </li>
+      <li class="nav-item" onclick="switchNav('all', this)">
+        <span>📋 All Tickets</span>
+        <span class="nav-badge" id="badge-all">6</span>
+      </li>
+      <li class="nav-item" onclick="switchNav('my', this)">
+        <span>📥 My Assigned Queue</span>
+        <span class="nav-badge" id="badge-my">2</span>
+      </li>
+      <li class="nav-item" onclick="switchNav('team', this)">
+        <span>👥 Team Support Queue</span>
+        <span class="nav-badge" id="badge-team">3</span>
+      </li>
+      <li class="nav-item" onclick="switchNav('risk', this)">
+        <span>⚠️ SLA At-Risk</span>
+        <span class="nav-badge danger" id="badge-risk">2</span>
+      </li>
+      <li style="margin: 16px 12px 6px; font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">GOVERNANCE</li>
+      <li class="nav-item" onclick="switchNav('rep', this)">
+        <span>📈 SLA & Reports (FR-022)</span>
+      </li>
+      <li class="nav-item" onclick="openBackendModal()">
+        <span>⚙️ System & Local API</span>
+      </li>
+    </ul>
+
+    <div class="user-footer">
+      <div class="avatar" id="user-avatar">A</div>
+      <div class="user-info">
+        <p id="user-name">Alex Miller</p>
+        <p id="user-role">Support Agent (Core Infra)</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View -->
+  <main class="main">
+    <!-- Top Header -->
+    <header class="header">
+      <h2 id="view-title">Enterprise Operations Dashboard</h2>
+      <input type="text" class="search-input" id="search-input" placeholder="Search by #, subject, requester..." oninput="handleSearch(this.value)">
+      <div class="header-actions">
+        <div class="status-pill" id="api-pill" onclick="openBackendModal()">
+          <span class="status-dot"></span>
+          <span id="api-status-text">Local API: 8080 (Mock Fallback)</span>
+        </div>
+        <select class="role-select" id="role-switcher" onchange="switchPersona(this.value)">
+          <option value="agent">Role: Support Agent (Alex Miller)</option>
+          <option value="customer">Role: External Customer (Global Logistics)</option>
+          <option value="employee">Role: Internal Requester (Rachel Adams)</option>
+          <option value="lead">Role: Team Lead / Dispatcher (Sarah Jenkins)</option>
+          <option value="manager">Role: Department Manager (Marcus Vance)</option>
+          <option value="admin">Role: System Administrator (DevOps Admin)</option>
+          <option value="auditor">Role: Auditor (Compliance Officer)</option>
+        </select>
+        <button class="btn-primary" onclick="openNewTicketModal()">+ New Ticket</button>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="content" id="content-container">
+      <!-- SLA Alert Banner -->
+      <div class="alert-banner">
+        <div class="alert-text">
+          <h4>🚨 1 Ticket has breached Resolution SLA target!</h4>
+          <p>TIC-2026-00106 (Payroll export defect) breached resolution deadline. Department Lead & Manager notified.</p>
+        </div>
+        <button class="btn-primary" style="background: var(--prio-critical);" onclick="filterAtRisk()">View Breached</button>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">TOTAL ACTIVE</div>
+          <div class="kpi-val primary" id="kpi-total">6</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">IN PROGRESS</div>
+          <div class="kpi-val" style="color: var(--status-in-progress);" id="kpi-progress">2</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">SLA AT-RISK</div>
+          <div class="kpi-val warning" id="kpi-risk">1</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">SLA BREACHES</div>
+          <div class="kpi-val danger" id="kpi-breach">1</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">AVG CSAT SCORE</div>
+          <div class="kpi-val success">4.8 ★</div>
+        </div>
+      </div>
+
+      <!-- 2-Column Dashboard Breakdown -->
+      <div class="dash-columns">
+        <!-- Priority Breakdown -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Priority & SLA Distribution (FR-006)</span>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label">
+              <span>Critical (2h Target)</span>
+              <strong>2 tickets (33%)</strong>
+            </div>
+            <div class="bar"><div class="bar-fill" style="width: 33%; background: var(--prio-critical);"></div></div>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label">
+              <span>High (4h Target)</span>
+              <strong>2 tickets (33%)</strong>
+            </div>
+            <div class="bar"><div class="bar-fill" style="width: 33%; background: var(--prio-high);"></div></div>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label">
+              <span>Medium (24h Target)</span>
+              <strong>2 tickets (33%)</strong>
+            </div>
+            <div class="bar"><div class="bar-fill" style="width: 33%; background: var(--prio-medium);"></div></div>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label">
+              <span>Low (72h Target)</span>
+              <strong>0 tickets (0%)</strong>
+            </div>
+            <div class="bar"><div class="bar-fill" style="width: 0%; background: var(--prio-low);"></div></div>
+          </div>
+          <hr style="margin: 18px 0; border: none; border-top: 1px solid var(--border);">
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span style="color: var(--text-muted);">SLA Compliance Target:</span>
+            <strong style="color: var(--status-resolved);">98.5% Adherence Target</strong>
+          </div>
+        </div>
+
+        <!-- Active Tickets Queue Table -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Live Active Tickets Queue</span>
+            <span style="font-size: 12px; color: var(--primary); cursor: pointer;" onclick="switchNav('all')">View All ›</span>
+          </div>
+          <table class="ticket-table">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Subject</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>SLA Clock</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- New Ticket Modal -->
+  <div class="modal-backdrop" id="new-ticket-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 style="font-size: 16px; font-weight: 700;">Register New Enterprise Ticket (FR-002, FR-003)</h3>
+        <span style="cursor: pointer; font-size: 20px;" onclick="closeNewTicketModal()">✕</span>
+      </div>
+      <form onsubmit="handleCreateTicket(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Target Department*</label>
+            <select class="form-control" id="form-dept" required>
+              <option value="dept-it">Information Technology (IT)</option>
+              <option value="dept-ops">Facilities & Field Operations (OPS)</option>
+              <option value="dept-fin">Finance & Billing (FIN)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Service Category*</label>
+            <select class="form-control" id="form-cat" required>
+              <option value="Infrastructure">Infrastructure</option>
+              <option value="Networking">Networking</option>
+              <option value="Enterprise Applications">Enterprise Applications</option>
+              <option value="Facilities">Facilities & HVAC</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 3x3 Dynamic Priority Matrix -->
+        <div class="matrix-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <strong style="font-size: 12px;">Dynamic Impact & Urgency Matrix (FR-006)</strong>
+            <span id="matrix-calculated" class="badge badge-high">Calculated Priority: High</span>
+          </div>
+          <div class="form-row">
+            <div>
+              <label style="font-size: 11px;">Business Impact:</label>
+              <select class="form-control" id="matrix-impact" onchange="recalcPriority()">
+                <option value="high">High (Department-wide / Production)</option>
+                <option value="medium" selected>Medium (Multiple users)</option>
+                <option value="low">Low (Single user)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px;">Service Urgency:</label>
+              <select class="form-control" id="matrix-urgency" onchange="recalcPriority()">
+                <option value="high" selected>High (Immediate attention required)</option>
+                <option value="medium">Medium (Can wait business hours)</option>
+                <option value="low">Low (Scheduled maintenance)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Subject / Problem Title*</label>
+          <input type="text" class="form-control" id="form-subject" placeholder="e.g. Production PostgreSQL replica heartbeat timeout" required>
+        </div>
+
+        <div class="form-group">
+          <label>Detailed Description*</label>
+          <textarea class="form-control" id="form-desc" rows="3" placeholder="Describe symptoms, affected transactions, or steps to reproduce..." required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Site / Location (Optional)</label>
+            <input type="text" class="form-control" id="form-loc" placeholder="e.g. Austin Innovation Center - Pod 2">
+          </div>
+          <div class="form-group">
+            <label>Asset / CI Identifier</label>
+            <input type="text" class="form-control" id="form-asset" placeholder="e.g. SRV-DB-PROD-01">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-primary" style="background: var(--surface-muted); color: var(--text-main);" onclick="closeNewTicketModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Register Ticket</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Backend API Dialog -->
+  <div class="modal-backdrop" id="backend-modal">
+    <div class="modal" style="width: 520px;">
+      <div class="modal-head">
+        <h3 style="font-size: 15px; font-weight: 700;">Local Backend API Configuration</h3>
+        <span style="cursor: pointer; font-size: 20px;" onclick="closeBackendModal()">✕</span>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+        Configure your local API endpoint. By default, the system probes this URL and automatically falls back to the in-memory mock database when your local backend is offline.
+      </p>
+      <div class="form-group">
+        <label>Backend Base URL</label>
+        <input type="text" class="form-control" id="backend-url-input" value="http://localhost:8080/api">
+      </div>
+      <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="testBackend()">Test Connection & Save</button>
+      <div id="backend-test-result" style="margin-top: 14px; font-size: 12px; padding: 10px; border-radius: 6px; display: none;"></div>
+      <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--border);">
+      <p style="font-size: 11px; color: var(--text-muted); font-family: Consolas, monospace; line-height: 1.4;">
+        Active Endpoints: GET /health • GET /tickets • POST /tickets • PUT /tickets/:id/status • PUT /tickets/:id/assign
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // State Store
+    const tickets = [
+      { id: 'tick-001', num: 'TIC-2026-00101', sub: 'Critical Production DB cluster failover latency spike', dept: 'IT (Infrastructure)', prio: 'Critical', status: 'In Progress', sla: '75m left', req: 'Global Logistics Corp', assignee: 'Alex Miller' },
+      { id: 'tick-002', num: 'TIC-2026-00102', sub: 'VPN Gateway Auth cert expiry for Remote Workers', dept: 'IT (Networking)', prio: 'High', status: 'Open', sla: '3h 35m left', req: 'Rachel Adams', assignee: 'Unassigned' },
+      { id: 'tick-003', num: 'TIC-2026-00103', sub: 'Building B Server Room A/C temperature threshold exceeded', dept: 'Facilities & Ops', prio: 'High', status: 'Assigned', sla: '2h left', req: 'NOC Sensor', assignee: 'Robert Taylor' },
+      { id: 'tick-004', num: 'TIC-2026-00104', sub: 'Inquiry regarding Q3 Volume Discount Invoicing Reconciliation', dept: 'Finance & Billing', prio: 'Medium', status: 'Pending Customer', sla: 'SLA Paused', req: 'Apex Financial', assignee: 'Sophie Bennett' },
+      { id: 'tick-005', num: 'TIC-2026-00105', sub: 'Single Sign-On (SSO) Okta SAML metadata renewal', dept: 'IT (SecOps)', prio: 'Medium', status: 'Resolved', sla: 'SLA Met', req: 'David Vance', assignee: 'Marcus Vance' },
+      { id: 'tick-006', num: 'TIC-2026-00106', sub: 'Legacy ERP Payroll export formatting defect', dept: 'IT (Applications)', prio: 'Critical', status: 'Reopened', sla: 'Breached (1h ago)', req: 'Payroll Dept', assignee: 'Elena Rostova' }
+    ];
+
+    function renderTicketsTable(list) {
+      const tbody = document.getElementById('tickets-table-body');
+      tbody.innerHTML = list.map(t => `
+        <tr onclick="alert('Viewing Ticket Details for ${t.num}\\nStatus: ${t.status}\\nPriority: ${t.prio}\\nAssignee: ${t.assignee}\\nSLA: ${t.sla}')">
+          <td class="t-num">${t.num}</td>
+          <td>
+            <div class="t-sub">${t.sub}</div>
+            <div class="t-cat">${t.dept} • By ${t.req}</div>
+          </td>
+          <td><span class="badge badge-${t.prio.toLowerCase().slice(0,4)}">${t.prio}</span></td>
+          <td><span class="badge badge-${t.status.toLowerCase().replace(' ', '')}">${t.status}</span></td>
+          <td><strong>${t.sla}</strong></td>
+        </tr>
+      `).join('');
+    }
+
+    renderTicketsTable(tickets);
+
+    function handleSearch(query) {
+      const q = query.toLowerCase();
+      const filtered = tickets.filter(t => t.num.toLowerCase().includes(q) || t.sub.toLowerCase().includes(q) || t.req.toLowerCase().includes(q));
+      renderTicketsTable(filtered);
+    }
+
+    function switchNav(key, el) {
+      if (el) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+      }
+      if (key === 'risk') {
+        const atRisk = tickets.filter(t => t.sla.includes('Breached') || t.sla.includes('75m'));
+        renderTicketsTable(atRisk);
+        document.getElementById('view-title').innerText = 'SLA At-Risk & Escalations';
+      } else if (key === 'my') {
+        renderTicketsTable(tickets.filter(t => t.assignee === 'Alex Miller'));
+        document.getElementById('view-title').innerText = 'My Assigned Queue';
+      } else if (key === 'team') {
+        renderTicketsTable(tickets.filter(t => t.dept.includes('IT')));
+        document.getElementById('view-title').innerText = 'Team Support Queue';
+      } else {
+        renderTicketsTable(tickets);
+        document.getElementById('view-title').innerText = 'Enterprise Operations Dashboard';
+      }
+    }
+
+    function filterAtRisk() {
+      switchNav('risk', document.querySelectorAll('.nav-item')[4]);
+    }
+
+    function switchPersona(role) {
+      const nameEl = document.getElementById('user-name');
+      const roleEl = document.getElementById('user-role');
+      const avatarEl = document.getElementById('user-avatar');
+      if (role === 'customer') {
+        nameEl.innerText = 'David Miller (Client)';
+        roleEl.innerText = 'External Customer (Global Logistics)';
+        avatarEl.innerText = 'C';
+      } else if (role === 'lead') {
+        nameEl.innerText = 'Sarah Jenkins (Lead)';
+        roleEl.innerText = 'Team Lead & Dispatcher';
+        avatarEl.innerText = 'L';
+      } else if (role === 'manager') {
+        nameEl.innerText = 'Marcus Vance';
+        roleEl.innerText = 'Department Manager';
+        avatarEl.innerText = 'M';
+      } else if (role === 'admin') {
+        nameEl.innerText = 'System Admin';
+        roleEl.innerText = 'System Administrator (DevOps)';
+        avatarEl.innerText = 'S';
+      } else if (role === 'auditor') {
+        nameEl.innerText = 'Compliance Auditor';
+        roleEl.innerText = 'Auditor / Read-Only Analyst';
+        avatarEl.innerText = 'R';
+      } else {
+        nameEl.innerText = 'Alex Miller';
+        roleEl.innerText = 'Support Agent (Core Infra)';
+        avatarEl.innerText = 'A';
+      }
+    }
+
+    function recalcPriority() {
+      const imp = document.getElementById('matrix-impact').value;
+      const urg = document.getElementById('matrix-urgency').value;
+      const badge = document.getElementById('matrix-calculated');
+      if (imp === 'high' && urg === 'high') {
+        badge.className = 'badge badge-crit';
+        badge.innerText = 'Calculated Priority: Critical (2h Target)';
+      } else if ((imp === 'high' && urg === 'medium') || (imp === 'medium' && urg === 'high')) {
+        badge.className = 'badge badge-high';
+        badge.innerText = 'Calculated Priority: High (4h Target)';
+      } else if (imp === 'low' && urg === 'low') {
+        badge.className = 'badge badge-low';
+        badge.innerText = 'Calculated Priority: Low (72h Target)';
+      } else {
+        badge.className = 'badge badge-med';
+        badge.innerText = 'Calculated Priority: Medium (24h Target)';
+      }
+    }
+
+    function openNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'flex'; }
+    function closeNewTicketModal() { document.getElementById('new-ticket-modal').style.display = 'none'; }
+    function openBackendModal() { document.getElementById('backend-modal').style.display = 'flex'; }
+    function closeBackendModal() { document.getElementById('backend-modal').style.display = 'none'; }
+
+    function handleCreateTicket(e) {
+      e.preventDefault();
+      const num = 'TIC-2026-00' + (100 + tickets.length + 1);
+      const sub = document.getElementById('form-subject').value;
+      const dept = document.getElementById('form-dept').selectedOptions[0].text;
+      const prioText = document.getElementById('matrix-calculated').innerText.split(':')[1].split('(')[0].trim();
+      tickets.unshift({
+        id: 'tick-' + (tickets.length + 1),
+        num: num,
+        sub: sub,
+        dept: dept,
+        prio: prioText,
+        status: 'Open',
+        sla: prioText === 'Critical' ? '2h left' : '4h left',
+        req: document.getElementById('user-name').innerText,
+        assignee: 'Unassigned (Triage Pool)'
+      });
+      document.getElementById('kpi-total').innerText = tickets.length;
+      document.getElementById('badge-all').innerText = tickets.length;
+      renderTicketsTable(tickets);
+      closeNewTicketModal();
+      alert(`Success! Ticket ${num} registered and queued for triage.`);
+    }
+
+    function testBackend() {
+      const url = document.getElementById('backend-url-input').value;
+      const res = document.getElementById('backend-test-result');
+      res.style.display = 'block';
+      res.style.background = '#fef3c7';
+      res.style.color = '#92400e';
+      res.innerText = 'Probing ' + url + '/health... Target offline. Seamless Mock DB Fallback Active.';
+      document.getElementById('api-status-text').innerText = 'Local API: 8080 (Mock Fallback)';
+    }
+  </script>
+</body>
+</html>
