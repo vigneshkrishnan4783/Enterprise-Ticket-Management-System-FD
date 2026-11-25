@@ -1,122 +1,239 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'theme/app_theme.dart';
+import 'providers/auth_provider.dart';
+import 'providers/app_settings_provider.dart';
+import 'providers/ticket_provider.dart';
+import 'widgets/app_sidebar.dart';
+import 'widgets/app_header.dart';
+import 'views/dashboard_view.dart';
+import 'views/ticket_list_view.dart';
+import 'views/ticket_detail_view.dart';
+import 'views/create_ticket_view.dart';
+import 'views/reports_view.dart';
+import 'views/admin_view.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AppSettingsProvider()),
+        ChangeNotifierProvider(create: (_) => TicketProvider()),
+      ],
+      child: const EnterpriseTicketApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class EnterpriseTicketApp extends StatelessWidget {
+  const EnterpriseTicketApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Enterprise Ticket Management System',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      home: const MainShell(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainShell> createState() => _MainShellState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MainShellState extends State<MainShell> {
+  int _navIndex = 0;
+  bool _isCreatingTicket = false;
+  bool _isViewingTicketDetail = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TicketProvider>(context, listen: false).loadInitialData();
+      Provider.of<AppSettingsProvider>(context, listen: false).checkConnection();
     });
+  }
+
+  String get _currentTitle {
+    if (_isCreatingTicket) return 'New Ticket Registration';
+    if (_isViewingTicketDetail) return 'Ticket Overview & Investigation';
+    switch (_navIndex) {
+      case 0:
+        return 'Enterprise Operations Dashboard';
+      case 1:
+        return 'Ticket Management & Queues';
+      case 2:
+        return 'My Assigned Queue';
+      case 3:
+        return 'Team Support Queue';
+      case 4:
+        return 'SLA At-Risk & Escalations';
+      case 5:
+        return 'SLA & Governance Analytics';
+      case 6:
+        return 'System Administration';
+      default:
+        return 'Enterprise Ticket System';
+    }
+  }
+
+  void _onNavigate(int index) {
+    final ticketProvider = Provider.of<TicketProvider>(context, listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+
+    setState(() {
+      _navIndex = index;
+      _isCreatingTicket = false;
+      _isViewingTicketDetail = false;
+    });
+
+    if (index == 2) {
+      ticketProvider.setActiveTab('MY_QUEUE', auth.currentUser);
+    } else if (index == 3) {
+      ticketProvider.setActiveTab('TEAM_QUEUE', auth.currentUser);
+    } else if (index == 4) {
+      ticketProvider.setActiveTab('AT_RISK', auth.currentUser);
+    } else if (index == 1) {
+      ticketProvider.setActiveTab('ALL', auth.currentUser);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+    final ticketProvider = Provider.of<TicketProvider>(context);
+
+    Widget body;
+    if (_isCreatingTicket) {
+      body = CreateTicketView(
+        onTicketCreated: (id) async {
+          await ticketProvider.selectTicket(id);
+          setState(() {
+            _isCreatingTicket = false;
+            _isViewingTicketDetail = true;
+          });
+        },
+        onCancel: () => setState(() => _isCreatingTicket = false),
+      );
+    } else if (_isViewingTicketDetail) {
+      body = TicketDetailView(
+        onBack: () => setState(() => _isViewingTicketDetail = false),
+      );
+    } else {
+      switch (_navIndex) {
+        case 0:
+          body = DashboardView(
+            onTicketSelected: (id) async {
+              await ticketProvider.selectTicket(id);
+              setState(() => _isViewingTicketDetail = true);
+            },
+            onViewAllTickets: () => setState(() => _navIndex = 1),
+          );
+          break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          body = TicketListView(
+            onTicketSelected: (id) async {
+              await ticketProvider.selectTicket(id);
+              setState(() => _isViewingTicketDetail = true);
+            },
+          );
+          break;
+        case 5:
+          body = const ReportsView();
+          break;
+        case 6:
+          body = const AdminView();
+          break;
+        default:
+          body = const Center(child: Text('View not found'));
+      }
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth >= 850;
+
+        if (!isDesktop) {
+          // Mobile / Tablet Compact Layout with Drawer
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(_currentTitle, style: const TextStyle(fontSize: 16)),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.add_rounded),
+                  tooltip: 'New Ticket',
+                  onPressed: () {
+                    setState(() {
+                      _isCreatingTicket = true;
+                      _isViewingTicketDetail = false;
+                    });
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+            drawer: Drawer(
+              child: AppSidebar(
+                selectedIndex: _navIndex,
+                onDestinationSelected: (idx) {
+                  Navigator.pop(context);
+                  _onNavigate(idx);
+                },
+              ),
+            ),
+            body: ticketProvider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : body,
+          );
+        }
+
+        // High-Resolution Web Desktop Screen Layout (Responsive 1920x1080 / 1440x900)
+        return Scaffold(
+          body: Row(
+            children: [
+              // Left Fixed Enterprise Sidebar
+              AppSidebar(
+                selectedIndex: _navIndex,
+                onDestinationSelected: _onNavigate,
+              ),
+
+              // Main Desktop Canvas
+              Expanded(
+                child: Column(
+                  children: [
+                    // Top Enterprise Navigation & Status Header
+                    AppHeader(
+                      title: _currentTitle,
+                      onNewTicketPressed: () {
+                        setState(() {
+                          _isCreatingTicket = true;
+                          _isViewingTicketDetail = false;
+                        });
+                      },
+                    ),
+
+                    // Active Viewport
+                    Expanded(
+                      child: ticketProvider.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : body,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
